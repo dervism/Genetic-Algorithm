@@ -34,11 +34,8 @@ public class TSPPopulation implements Population {
      * Keep the best solutions, and remove the
      * bad ones.
      */
-    public void selectBest() {
-
-        // you have to experiment this ratio
-        // here, I select only the top 30% of the population
-        int reduceSize = (int) (population.size() * 0.3);
+    public void selectBest(double selectionRate) {
+        int reduceSize = (int) (population.size() * selectionRate);
 
         sortByFitness();
 
@@ -49,16 +46,27 @@ public class TSPPopulation implements Population {
         } while (population.size() > newSize);
     }
 
+    public void selectBest(int reduce) {
+        sortByFitness();
+
+        int newSize = population.size() - reduce;
+
+        do {
+            population.remove(population.size()-1);
+        } while (population.size() > newSize);
+    }
+
+
     /**
      * Divide population in two and select a parent
      * from the best group of chromosomes.
      *
      * @return
      */
-    public Chromosome[] selectParents() {
+    public Chromosome[] selectParents(double selectionRate) {
         Chromosome[] parents = new Chromosome[2];
 
-        int selection = (int) (population.size() * 0.8);
+        int selection = (int) (population.size() * selectionRate);
 
         int mother = tsp.random.nextInt(selection);
         parents[0] = population.get(mother);
@@ -73,6 +81,10 @@ public class TSPPopulation implements Population {
         parents[1] = population.get(father);
 
         return parents;
+    }
+
+    public Chromosome[] selectParents() {
+        return selectParents(0.8);
     }
 
     public void add(Chromosome chromosome) {

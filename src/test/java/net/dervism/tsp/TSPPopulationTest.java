@@ -19,7 +19,7 @@ public class TSPPopulationTest {
         Random random = new Random(4567);
 
         tspPopulation.createPopulation(30);
-        tspPopulation.selectBest();
+        tspPopulation.selectBest(0.5);
         System.out.println(tspPopulation.stat());
 
     }

@@ -8,9 +8,15 @@ import org.junit.Test;
 public class TSPTest {
 
     @Test
+    public void evolutionaryGA() throws Exception {
+        TSP tsp = new TSP();
+        //tsp.evolutionaryGA(2, 0.85, 0.05);
+    }
+
+    @Test
     public void randomGreedyCrossOver() throws Exception {
         TSP tsp = new TSP();
-        tsp.runRandomGreedyCrossOverGA(1);
+        //tsp.runRandomGreedyCrossOverGA(1);
     }
 
     @Test

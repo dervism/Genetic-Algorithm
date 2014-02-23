@@ -70,6 +70,97 @@ public class TSP {
 
     }
 
+    /**
+     * The strategy in this algorithm keeps the population size at the same
+     * level without adding any random chromosomes in any cycle. Instead, a
+     * crossover rate and a mutation rate is used to transform only the given
+     * percentage of the population. The selection strategy simply removes as
+     * many chromosomes that was added. This way, the population should get
+     * fitter with every cycle.
+     *
+     * This implementation has shown that:
+     *
+     * - I can use less chromosomes (only 100 are created initially)
+     * - I never add additional random chromosomes
+     *
+     * Best solutions so far:
+     * Fitness: 303, route: [0, 12, 10, 8, 7, 6, 9, 14, 2, 13, 11, 3, 5, 4, 15, 1]
+     *
+     * @param minutes
+     * @param crossoverRate
+     * @param mutationRate
+     */
+    public  void evolutionaryGA(final int minutes, final double crossoverRate, final double mutationRate) {
+
+        // create initial population
+        final List<Chromosome> population = tspPopulation.createPopulation(100);
+        tspPopulation.sortByFitness();
+
+        new Thread(new Runnable() {
+            int best = tspPopulation.calculateFitness(tspPopulation.getBest());
+            int generation = 1;
+
+            long start = System.currentTimeMillis();
+            long end = start + (minutes * 60000);
+
+            @Override
+            public void run() {
+                while(System.currentTimeMillis() < end) {
+
+                    // do crossover on the 'crossoverRate' % of the population
+                    int crossovers = (int) (population.size() * crossoverRate);
+                    for (int i = 0; i < crossovers; i++) {
+                        Chromosome[] parents = tspPopulation.selectParents(0.3);
+                        Chromosome child1 = tspEvolution.crossover(parents[0], parents[1]);
+                        Chromosome child2 = tspEvolution.crossover(parents[1], parents[0]);
+
+                        population.add(child1); population.add(child2);
+                    }
+
+                    // do mutations on the 'mutationRate' % of the population
+                    int mutations = (int) (population.size() * mutationRate);
+                    for (int i = 0; i < mutations; i++) {
+                        Chromosome[] parents = tspPopulation.selectParents(1.0);
+                        population.add(tspEvolution.arrayMutate(parents[0]));
+                        population.add(tspEvolution.arrayMutate(parents[1]));
+                    }
+
+                    // select the best chromosomes from this generation
+                    tspPopulation.selectBest( ((crossovers * 2) + (mutations * 2)) );
+
+                    int bestFromGeneration = tspPopulation.calculateFitness(tspPopulation.getBest());
+                    if (bestFromGeneration < best) {
+                        best = bestFromGeneration;
+                        System.out.println("Found better route in generation " + generation + " with score " + best
+                                + ", population size " + population.size());
+                    }
+
+                    generation++;
+                }
+
+                best = tspPopulation.calculateFitness(tspPopulation.getBest());
+
+                Chromosome bestRoute = tspPopulation.getBest();
+                long[] cities = tspEncoder.toArray(bestRoute);
+
+                System.out.println("Best score: " + best);
+                System.out.println(Arrays.toString(cities));
+            }
+        }).run();
+
+    }
+
+    /**
+     * NB: Experimental version!
+     * In this version of the TSP algorithm, I use the percentage rates to determine
+     * if crossovers and mutations should occur or not. The strategy I use in this
+     * version will always create a new generation where the children is some sort
+     * of random variation of the best chromosomes from previous generation. After
+     * selecting the best and reducing the population, random data are injected and
+     * the process repeats.
+     *
+     * @param minutes Number of minutes to run the simulation
+     */
     public void runRandomGreedyCrossOverGA(final int minutes) {
         final Random randomRate = new Random();
 
@@ -78,6 +169,7 @@ public class TSP {
 
         tspPopulation.sortByFitness();
 
+        // overriding the default values
         mutationRate = 100 - (int)(100 * 0.05);
         crossoverRate = 100 - (int)(100 * 0.95);
 
@@ -87,7 +179,8 @@ public class TSP {
             boolean next = true;
 
             long start = System.currentTimeMillis();
-            long end = start + (minutes * 60000); // 4 minutes
+            long end = start + (minutes * 60000);
+            double selection = 0.8;
 
             @Override
             public void run() {
@@ -95,7 +188,7 @@ public class TSP {
 
                     // generate next generation
                     // select two parents from among the best chromosomes
-                    Chromosome[] parents = tspPopulation.selectParents();
+                    Chromosome[] parents = tspPopulation.selectParents(selection);
 
                     // have sex and breed
                     int rate = randomRate.nextInt(100);
@@ -128,7 +221,8 @@ public class TSP {
                     }
 
                     // select the best chromosomes from this generation
-                    tspPopulation.selectBest();
+                    // we have to experiment with the selection percentage
+                    tspPopulation.selectBest(0.3);
 
                     int bestFromGeneration = tspPopulation.calculateFitness(tspPopulation.getBest());
                     if (bestFromGeneration < best) {
@@ -152,9 +246,17 @@ public class TSP {
                 System.out.println(Arrays.toString(cities));
             }
         }).run();
-
     }
 
+    /**
+     * This version does not use the suggested rates to do crossovers or mutations,
+     * instead a crossover, a mutant and two randon chromosomes are added until
+     * the new generation is created (that is, the population size is at the initial
+     * level). When the generation is created, sort and select the best chromosomes
+     * and repeat the process.
+     *
+     * @param minutes
+     */
     public void runRandomizedGA(final int minutes) {
         final Random randomRate = new Random();
 
@@ -186,7 +288,6 @@ public class TSP {
                         population.add(tspEvolution.crossover(parents[0], parents[1]));
                         population.add(tspEvolution.crossover(parents[1], parents[0]));
 
-
                         // two random childern
                         population.add(tspEncoder.createRandomChromosome(random));
                         population.add(tspEncoder.createRandomChromosome(random));
@@ -196,7 +297,7 @@ public class TSP {
                     }
 
                     // select the best
-                    tspPopulation.selectBest();
+                    tspPopulation.selectBest(0.3);
 
                     int bestFromGeneration = tspPopulation.calculateFitness(tspPopulation.getBest());
                     if (bestFromGeneration < best) {
@@ -219,55 +320,57 @@ public class TSP {
 
     }
 
+    /**
+     * Brute-Force algorithm to find the best solution. However,
+     * for the problem of TSP with 16 cities and 1,307,674,368,000 possible
+     * solutions this process will take nearly two days to complete.
+     * This implementation is based on the WatchMaker code
+     * (http://watchmaker.uncommons.org/).
+     */
     public void runBruteForceTSP() {
-        int startCity = 0;
-        Integer[] cities = new Integer[15];
-        for (int i = 1; i <= cities.length; i++) {
-            cities[i-1] = new Integer(i);
-        }
-        System.out.println(Arrays.toString(cities));
 
-        PermutationGenerator<Integer> pg = new PermutationGenerator<>(cities);
-        long totalPermutations = pg.getTotalPermutations();
-        System.out.println("Total permutations: " + totalPermutations);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int startCity = 0;
+                Integer[] cities = new Integer[15];
+                for (int i = 1; i <= cities.length; i++) {
+                    cities[i-1] = new Integer(i);
+                }
+                System.out.println(Arrays.toString(cities));
 
-        int best = Integer.MAX_VALUE;
-        int[] bestRoute = null;
-        long count = 0;
+                PermutationGenerator<Integer> pg = new PermutationGenerator<>(cities);
+                long totalPermutations = pg.getTotalPermutations();
+                System.out.println("Total permutations: " + totalPermutations);
 
-        while (pg.hasMore()) {
-            List<Integer> route = pg.nextPermutationAsList();
-            route.add(0, startCity);
-            int[] array = new int[16];
-            for (int i = 0; i < array.length; i++) {
-                array[i] = route.get(0);
+                int best = Integer.MAX_VALUE;
+                int[] bestRoute = null;
+                long count = 0;
+
+                while (pg.hasMore()) {
+                    List<Integer> route = pg.nextPermutationAsList();
+                    route.add(0, startCity);
+                    int[] array = new int[16];
+                    for (int i = 0; i < array.length; i++) {
+                        array[i] = route.get(i);
+                    }
+
+                    int fitness = tspPopulation.calculateArrayFitness(array);
+                    if (fitness < best) {
+                        best = fitness;
+                        bestRoute = array;
+                        System.out.println("Best: " + best + Arrays.toString(array));
+                    }
+                    ++count;
+                    if ((count % 100000000) == 0) {
+                        System.out.printf("%.4f %% done.\n", (((double) count / totalPermutations) * 100.0));
+                    }
+                }
+
+                System.out.println("Best route: " + best + ", " + Arrays.toString(bestRoute));
             }
-
-            int fitness = tspPopulation.calculateArrayFitness(array);
-            if (fitness < best) {
-                best = fitness;
-                bestRoute = array;
-                System.out.println("Best: " + best + Arrays.toString(array));
-            }
-            ++count;
-            if (count % 100000000 == 0) {
-                System.out.println((((double)count / totalPermutations) * 100.0) + "% done.");
-            }
-        }
-
-        System.out.println("Best route: " + best + ", " + Arrays.toString(bestRoute));
+        }).run();
 
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

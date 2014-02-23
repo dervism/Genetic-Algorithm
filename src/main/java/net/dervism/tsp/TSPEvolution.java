@@ -97,8 +97,11 @@ public class TSPEvolution implements Evolution {
         // set the start city
         child[0] = left[0];
 
+        //int leftIndex = ((left.length-1)/2) + 1;
+        int leftIndex = 12;
+
         // first half from mother
-        for (int i = 1; i < ((left.length-1)/2)+1; i++) {
+        for (int i = 1; i < leftIndex; i++) {
             child[++c] = left[i];
         }
 
