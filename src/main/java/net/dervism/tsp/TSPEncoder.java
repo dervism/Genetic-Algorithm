@@ -1,14 +1,15 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 import net.dervism.genericalgorithms.Encoder;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Random;
 
 /**
  * Created by dervism on 13/02/14.
  */
-public class TSPEncoder implements Encoder {
+public class TSPEncoder implements Encoder<Long> {
 
     // the start index
     private long shift = 4;
@@ -18,8 +19,12 @@ public class TSPEncoder implements Encoder {
 
     private int start = 0;
 
+    @Override
+    public BitChromosome createChromosome(Long... cities) {
+        return createChromosome(ArrayUtils.toPrimitive(cities));
+    }
 
-    public Chromosome createChromosome(long... cities) {
+    public BitChromosome createChromosome(long... cities) {
 
         long genes = 0x0L;
 
@@ -31,13 +36,13 @@ public class TSPEncoder implements Encoder {
             genes |= (city << (shift * i));
         }
 
-        Chromosome chromosome = new Chromosome(genes);
+        BitChromosome bitChromosome = new BitChromosome(genes);
 
-        return chromosome;
+        return bitChromosome;
     }
 
     @Override
-    public Chromosome createRandomChromosome(Random random) {
+    public BitChromosome createRandomChromosome(Random random) {
 
         long genes = 0x0L;
 
@@ -70,9 +75,9 @@ public class TSPEncoder implements Encoder {
             genes |= (city << (shift * i));
         }
 
-        Chromosome chromosome = new Chromosome(genes);
+        BitChromosome bitChromosome = new BitChromosome(genes);
 
-        return chromosome;
+        return bitChromosome;
     }
 
     public long nextLong(Random r, int n) {
@@ -96,37 +101,41 @@ public class TSPEncoder implements Encoder {
 
     /**
      * Decodes the right most value.
-     * Calling this method is the same as calling getValue(chromosome, 0).
+     * Calling this method is the same as calling getValue(bitChromosome, 0).
      *
-     * @param chromosome
+     * @param bitChromosome
      * @return
      */
-    public int getIndex(Chromosome chromosome) {
-        return (int)(chromosome.genes & mask);
+    public int getIndex(BitChromosome bitChromosome) {
+        return (int)(bitChromosome.genes & mask);
     }
 
     /**
      * Decodes a  4-bit value at the given index.
      *
-     * @param chromosome
+     * @param bitChromosome
      * @param index
      * @return
      */
-    public int getValue(Chromosome chromosome, int index) {
-        return (int)((chromosome.genes >> (shift * index)) & mask);
+    public int getValue(BitChromosome bitChromosome, int index) {
+        return (int)((bitChromosome.genes >> (shift * index)) & mask);
     }
 
-    public void setValue(int index, long value, Chromosome chromosome) {
-        chromosome.genes &= ~(mask << (shift * index));
-        chromosome.genes |= (value << (shift * index));
+    public void setValue(int index, long value, BitChromosome bitChromosome) {
+        bitChromosome.genes &= ~(mask << (shift * index));
+        bitChromosome.genes |= (value << (shift * index));
     }
 
-    public long[] toArray(Chromosome chromosome) {
+    public long[] toArray(BitChromosome bitChromosome) {
         long[] content = new long[16];
         for (int i = 0; i < content.length; i++) {
-            content[i] = getValue(chromosome, i);
+            content[i] = getValue(bitChromosome, i);
         }
         return content;
+    }
+
+    public Long[] toObjectArray(BitChromosome bitChromosome) {
+        return ArrayUtils.toObject(toArray(bitChromosome));
     }
 
 }

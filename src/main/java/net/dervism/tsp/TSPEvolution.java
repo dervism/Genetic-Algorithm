@@ -1,14 +1,9 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.Chromosome;
-import net.dervism.genericalgorithms.Encoder;
+import net.dervism.genericalgorithms.BitChromosome;
 import net.dervism.genericalgorithms.Evolution;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by dervism on 14/02/14.
@@ -34,7 +29,7 @@ public class TSPEvolution implements Evolution {
      * @return
      */
     @Override
-    public Chromosome mutate(Chromosome parent) {
+    public BitChromosome mutate(BitChromosome parent) {
         // create random indexes
         int ix = 1 + random.nextInt(cityCount);
         int iy = 1 + random.nextInt(cityCount);
@@ -50,17 +45,17 @@ public class TSPEvolution implements Evolution {
         long i = tsp.tspEncoder.getValue(parent, ix);
         long j = tsp.tspEncoder.getValue(parent, iy);
 
-        Chromosome chromosome = new Chromosome(parent);
+        BitChromosome bitChromosome = new BitChromosome(parent);
 
         // swap values
-        tsp.tspEncoder.setValue(ix, j, chromosome);
-        tsp.tspEncoder.setValue(iy, i, chromosome);
+        tsp.tspEncoder.setValue(ix, j, bitChromosome);
+        tsp.tspEncoder.setValue(iy, i, bitChromosome);
 
-        return chromosome;
+        return bitChromosome;
     }
 
 
-    public Chromosome arrayMutate(Chromosome chromosome) {
+    public BitChromosome arrayMutate(BitChromosome bitChromosome) {
         int ix = 1 + random.nextInt(cityCount);
         int iy = 1 + random.nextInt(cityCount);
 
@@ -71,18 +66,18 @@ public class TSPEvolution implements Evolution {
             } while (ix == iy);
         }
 
-        // convert chromosome to array
-        long[] array = tsp.tspEncoder.toArray(chromosome);
+        // convert bitChromosome to array
+        long[] array = tsp.tspEncoder.toArray(bitChromosome);
 
         // swap values in the array
         tsp.tspEncoder.swap(array, ix, iy);
 
-        // encode the array into the chromosome again
+        // encode the array into the bitChromosome again
         return tsp.tspEncoder.createChromosome(array);
     }
 
     @Override
-    public Chromosome crossover(Chromosome mother, Chromosome father) {
+    public synchronized BitChromosome crossover(BitChromosome mother, BitChromosome father) {
 
         long[] left = tsp.tspEncoder.toArray(mother);
         long[] right = tsp.tspEncoder.toArray(father);
@@ -98,7 +93,7 @@ public class TSPEvolution implements Evolution {
         child[0] = left[0];
 
         //int leftIndex = ((left.length-1)/2) + 1;
-        int leftIndex = 12;
+        int leftIndex = 9;
 
         // first half from mother
         for (int i = 1; i < leftIndex; i++) {

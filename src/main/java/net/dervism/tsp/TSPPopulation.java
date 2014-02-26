@@ -1,6 +1,6 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 import net.dervism.genericalgorithms.Population;
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class TSPPopulation implements Population {
 
-    private List<Chromosome> population;
+    private List<BitChromosome> population;
 
     private TSP tsp;
 
@@ -19,12 +19,12 @@ public class TSPPopulation implements Population {
     }
 
     @Override
-    public List<Chromosome> createPopulation(int size) {
-        population = new ArrayList<Chromosome>(size*4);
+    public List<BitChromosome> createPopulation(int size) {
+        population = new ArrayList<BitChromosome>(size*4);
 
         for (int i = 0; i < size; i++) {
-            Chromosome chromosome = tsp.tspEncoder.createRandomChromosome(tsp.random);
-            population.add(chromosome);
+            BitChromosome bitChromosome = tsp.tspEncoder.createRandomChromosome(tsp.random);
+            population.add(bitChromosome);
         }
 
         return population;
@@ -46,7 +46,7 @@ public class TSPPopulation implements Population {
         } while (population.size() > newSize);
     }
 
-    public void selectBest(int reduce) {
+    public synchronized void selectBest(int reduce) {
         sortByFitness();
 
         int newSize = population.size() - reduce;
@@ -63,8 +63,8 @@ public class TSPPopulation implements Population {
      *
      * @return
      */
-    public Chromosome[] selectParents(double selectionRate) {
-        Chromosome[] parents = new Chromosome[2];
+    public synchronized BitChromosome[] selectParents(double selectionRate) {
+        BitChromosome[] parents = new BitChromosome[2];
 
         int selection = (int) (population.size() * selectionRate);
 
@@ -83,15 +83,15 @@ public class TSPPopulation implements Population {
         return parents;
     }
 
-    public Chromosome[] selectParents() {
+    public BitChromosome[] selectParents() {
         return selectParents(0.8);
     }
 
-    public void add(Chromosome chromosome) {
-        population.add(chromosome);
+    public void add(BitChromosome bitChromosome) {
+        population.add(bitChromosome);
     }
 
-    public Chromosome getBest() {
+    public BitChromosome getBest() {
         return population.get(0);
     }
 
@@ -99,19 +99,19 @@ public class TSPPopulation implements Population {
         Collections.sort(population, new ChromosomeComparator());
     }
 
-    public class ChromosomeComparator implements Comparator<Chromosome> {
+    public class ChromosomeComparator implements Comparator<BitChromosome> {
         @Override
-        public int compare(Chromosome o1, Chromosome o2) {
+        public int compare(BitChromosome o1, BitChromosome o2) {
             Integer fitness1 = calculateFitness(o1);
             Integer fitness2 = calculateFitness(o2);
             return fitness1.compareTo(fitness2);
         }
     }
 
-    public int calculateFitness(Chromosome chromosome) {
+    public int calculateFitness(BitChromosome bitChromosome) {
         int fitness = 0;
 
-        long[] sequence = tsp.tspEncoder.toArray(chromosome);
+        long[] sequence = tsp.tspEncoder.toArray(bitChromosome);
 
         for (int i = 1; i < sequence.length; i++) {
             int cityFrom = (int)sequence[i-1];
@@ -127,7 +127,7 @@ public class TSPPopulation implements Population {
     }
 
     /**
-     * Method to calculate distance without having a Chromosome.
+     * Method to calculate distance without having a BitChromosome.
      * This can be used to brute force a solution.
      *
      * @param array
@@ -159,8 +159,8 @@ public class TSPPopulation implements Population {
     public String stat() {
         String ret = "";
         int c = 1;
-        for (Chromosome chromosome : population) {
-            ret += c++ + " " + calculateFitness(chromosome) + "\n";
+        for (BitChromosome bitChromosome : population) {
+            ret += c++ + " " + calculateFitness(bitChromosome) + ", ";
         }
 
         return ret;

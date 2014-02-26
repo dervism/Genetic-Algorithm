@@ -3,9 +3,11 @@ package net.dervism.genericalgorithms;
 import java.util.Random;
 
 /**
+ * This class is only ment to be used a basic template.
+ *
  * Created by dervism on 28.12.13.
  */
-public class ChromosomeEncoder implements Encoder {
+public class ChromosomeEncoder implements Encoder<Long> {
 
     // the start index
     private long first_val_shift = 7;
@@ -17,36 +19,36 @@ public class ChromosomeEncoder implements Encoder {
     private long second_val_mask = 0x7FL; // 7 bits
 
     @Override
-    public Chromosome createChromosome(long... values) {
+    public BitChromosome createChromosome(Long... values) {
         return createChromosome(values[0], values[1], values[2]);
     }
 
-    public Chromosome createChromosome(long index, long first_val, long second_val) {
+    public BitChromosome createChromosome(long index, long first_val, long second_val) {
 
         long genes = 0x0L;
 
         genes = 0 | index | (first_val << first_val_shift) | (second_val << second_val_shift);
 
-        Chromosome chromosome = new Chromosome(genes);
+        BitChromosome bitChromosome = new BitChromosome(genes);
 
-        return chromosome;
+        return bitChromosome;
     }
 
     @Override
-    public Chromosome createRandomChromosome(Random random) {
+    public BitChromosome createRandomChromosome(Random random) {
         return null;
     }
 
-    public int getIndex(Chromosome chromosome) {
-        return (int)(chromosome.genes & index_mask);
+    public int getIndex(BitChromosome bitChromosome) {
+        return (int)(bitChromosome.genes & index_mask);
     }
 
-    public int getFirstVal(Chromosome chromosome) {
-        return (int)((chromosome.genes >> first_val_shift) & first_val_mask);
+    public int getFirstVal(BitChromosome bitChromosome) {
+        return (int)((bitChromosome.genes >> first_val_shift) & first_val_mask);
     }
 
-    public int getSecondVal(Chromosome chromosome) {
-        return (int)((chromosome.genes >> second_val_shift) & second_val_mask);
+    public int getSecondVal(BitChromosome bitChromosome) {
+        return (int)((bitChromosome.genes >> second_val_shift) & second_val_mask);
     }
 
 }

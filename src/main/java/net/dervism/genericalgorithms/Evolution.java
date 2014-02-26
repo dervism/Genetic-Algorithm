@@ -5,8 +5,8 @@ package net.dervism.genericalgorithms;
  */
 public interface Evolution {
 
-    public Chromosome mutate(Chromosome chromosome);
+    public BitChromosome mutate(BitChromosome bitChromosome);
 
-    public Chromosome crossover(Chromosome left, Chromosome right);
+    public BitChromosome crossover(BitChromosome left, BitChromosome right);
 
 }

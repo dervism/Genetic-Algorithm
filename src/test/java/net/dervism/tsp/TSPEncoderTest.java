@@ -1,10 +1,9 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -23,13 +22,13 @@ public class TSPEncoderTest {
             cities[i] = i;
         }
 
-        Chromosome chromosome = tspEncoder.createChromosome(cities);
-        System.out.println(chromosome);
+        BitChromosome bitChromosome = tspEncoder.createChromosome(cities);
+        System.out.println(bitChromosome);
 
-        Assert.assertEquals(0, tspEncoder.getIndex(chromosome));
+        Assert.assertEquals(0, tspEncoder.getIndex(bitChromosome));
 
         for (int i = 0; i < cities.length; i++) {
-            Assert.assertEquals(i, tspEncoder.getValue(chromosome, i));
+            Assert.assertEquals(i, tspEncoder.getValue(bitChromosome, i));
         }
     }
 
@@ -37,9 +36,9 @@ public class TSPEncoderTest {
     public void testCreateRandomChromosome() throws Exception {
         TSPEncoder tspEncoder = new TSPEncoder();
         Random random = new Random(123);
-        Chromosome chromosome = tspEncoder.createRandomChromosome(random);
-        System.out.println(chromosome);
-        long[] array = tspEncoder.toArray(chromosome);
+        BitChromosome bitChromosome = tspEncoder.createRandomChromosome(random);
+        System.out.println(bitChromosome);
+        long[] array = tspEncoder.toArray(bitChromosome);
         Arrays.sort(array);
         System.out.println(Arrays.toString(array));
 
@@ -57,7 +56,7 @@ public class TSPEncoderTest {
 
         // create an empty long
         long l1 = 0b0000000000000000000000000000000000000000000000000000000000000000L;
-        Chromosome c = new Chromosome(l1);
+        BitChromosome c = new BitChromosome(l1);
 
         // set every group of 4 bit to value 15 (16 groups * 4 bits in every group = 64 bits)
         for (int i = 0; i <= 16; i++) {
@@ -70,18 +69,18 @@ public class TSPEncoderTest {
         }
 
         // create a new random bit sequence
-        Chromosome chromosome = tspEncoder.createRandomChromosome(new Random(4567));
-        System.out.println(chromosome);
+        BitChromosome bitChromosome = tspEncoder.createRandomChromosome(new Random(4567));
+        System.out.println(bitChromosome);
 
         // index 11 should have value 8
-        Assert.assertEquals(8, tspEncoder.getValue(chromosome, 11));
+        Assert.assertEquals(8, tspEncoder.getValue(bitChromosome, 11));
 
         // set index 11 to be value 15
-        tspEncoder.setValue(11, 15, chromosome);
-        System.out.println(chromosome);
+        tspEncoder.setValue(11, 15, bitChromosome);
+        System.out.println(bitChromosome);
 
         // index 11 should be updated to value 15
-        Assert.assertEquals(15, tspEncoder.getValue(chromosome, 11));
+        Assert.assertEquals(15, tspEncoder.getValue(bitChromosome, 11));
     }
 
 }

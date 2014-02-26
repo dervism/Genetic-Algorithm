@@ -1,6 +1,6 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,18 +20,18 @@ public class TSPEvolutionTest {
         Random random = new Random(4567);
 
         // create a randomized bit sequenze
-        Chromosome chromosome = tspEncoder.createRandomChromosome(random);
-        System.out.println(chromosome);
+        BitChromosome bitChromosome = tspEncoder.createRandomChromosome(random);
+        System.out.println(bitChromosome);
 
-        // print the integers in the chromosome before the mutation
-        long[] array = tspEncoder.toArray(chromosome);
+        // print the integers in the bitChromosome before the mutation
+        long[] array = tspEncoder.toArray(bitChromosome);
         System.out.println(Arrays.toString(array));
 
         // change it
-        Chromosome mutatedChromosome = tspEvolution.mutate(chromosome);
+        BitChromosome mutatedBitChromosome = tspEvolution.mutate(bitChromosome);
 
-        // print out the new chromosome
-        long[] mutated = tspEncoder.toArray(mutatedChromosome);
+        // print out the new bitChromosome
+        long[] mutated = tspEncoder.toArray(mutatedBitChromosome);
         System.out.println(Arrays.toString(mutated));
 
         Arrays.sort(mutated);
@@ -54,19 +54,19 @@ public class TSPEvolutionTest {
         TSPPopulation tspPopulation = new TSPPopulation(tsp);
         Random random = new Random(4567);
 
-        List<Chromosome> population = tspPopulation.createPopulation(2000);
+        List<BitChromosome> population = tspPopulation.createPopulation(2000);
 
         long start = System.currentTimeMillis();
-        for (Chromosome chromosome : population) {
-            Chromosome child = tspEvolution.mutate(chromosome);
+        for (BitChromosome bitChromosome : population) {
+            BitChromosome child = tspEvolution.mutate(bitChromosome);
         }
         start = System.currentTimeMillis() - start;
 
         System.out.println("Bitwise mutation: " + start + " millis.");
 
         start = System.currentTimeMillis();
-        for (Chromosome chromosome : population) {
-            Chromosome child = tspEvolution.arrayMutate(chromosome);
+        for (BitChromosome bitChromosome : population) {
+            BitChromosome child = tspEvolution.arrayMutate(bitChromosome);
         }
         start = System.currentTimeMillis() - start;
 
@@ -78,15 +78,15 @@ public class TSPEvolutionTest {
         TSPEncoder tspEncoder = new TSPEncoder();
         TSPEvolution tspEvolution = new TSPEvolution(new TSP());
 
-        Chromosome mother = tspEncoder.createRandomChromosome(new Random());
+        BitChromosome mother = tspEncoder.createRandomChromosome(new Random());
         long[] m = tspEncoder.toArray(mother);
         System.out.println(Arrays.toString(m));
 
-        Chromosome father = tspEncoder.createRandomChromosome(new Random());
+        BitChromosome father = tspEncoder.createRandomChromosome(new Random());
         long[] f = tspEncoder.toArray(father);
         System.out.println(Arrays.toString(f));
 
-        Chromosome child = tspEvolution.crossover(mother, father);
+        BitChromosome child = tspEvolution.crossover(mother, father);
         long[] c = tspEncoder.toArray(child);
         System.out.println(Arrays.toString(c));
 

@@ -1,6 +1,6 @@
 package net.dervism.knapsack;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,27 +36,27 @@ public class Knapsack {
         }
     }
 
-    public List<Chromosome> createRandomPopulation(int size) {
-        List<Chromosome> population = new ArrayList<>(size * 2);
+    public List<BitChromosome> createRandomPopulation(int size) {
+        List<BitChromosome> population = new ArrayList<>(size * 2);
         Random rand = new Random();
 
         for (int i = 0; i < size; i++) {
-            Chromosome chromosome = new Chromosome();
+            BitChromosome bitChromosome = new BitChromosome();
             for (int j = 0; j < 64; j++) {
                 if (rand.nextBoolean())
-                    chromosome = chromosome.setNthBit(j);
+                    bitChromosome = bitChromosome.setNthBit(j);
             }
-            population.add(chromosome);
+            population.add(bitChromosome);
         }
 
         return population;
     }
 
-    public int calcFitness(Chromosome chromosome) {
+    public int calcFitness(BitChromosome bitChromosome) {
         int fitness = 0;
 
         for (int i = 0; i < 64; i++) {
-            if (chromosome.getNthBit(i)) {
+            if (bitChromosome.getNthBit(i)) {
                 fitness += objectValue[i];
             }
         }
@@ -64,11 +64,11 @@ public class Knapsack {
         return fitness;
     }
 
-    public int calcSpace(Chromosome chromosome) {
+    public int calcSpace(BitChromosome bitChromosome) {
         int totalSpace = 0;
 
         for (int i = 0; i < 64; i++) {
-            if (chromosome.getNthBit(i)) {
+            if (bitChromosome.getNthBit(i)) {
                 totalSpace += objectSpace[i];
             }
         }
@@ -76,11 +76,11 @@ public class Knapsack {
         return totalSpace;
     }
 
-    public int itemsInside(Chromosome chromosome) {
+    public int itemsInside(BitChromosome bitChromosome) {
         int items = 0;
 
         for (int i = 0; i < 64; i++) {
-            if (chromosome.getNthBit(i)) {
+            if (bitChromosome.getNthBit(i)) {
                 items++;
             }
         }

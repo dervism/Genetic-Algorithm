@@ -9,12 +9,12 @@ package net.dervism.genericalgorithms;
 public abstract class ChromosomeEvolution implements Evolution {
 
     @Override
-    public Chromosome mutate(Chromosome chromosome) {
+    public BitChromosome mutate(BitChromosome bitChromosome) {
         return null;
     }
 
     @Override
-    public Chromosome crossover(Chromosome mother, Chromosome father) {
+    public BitChromosome crossover(BitChromosome mother, BitChromosome father) {
         return null;
     }
 

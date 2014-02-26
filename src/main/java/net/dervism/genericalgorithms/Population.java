@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface Population {
 
-    public List<Chromosome> createPopulation(int size);
+    public List<BitChromosome> createPopulation(int size);
 
 }

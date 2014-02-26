@@ -1,11 +1,12 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 import org.uncommons.maths.combinatorics.PermutationGenerator;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -93,8 +94,10 @@ public class TSP {
     public  void evolutionaryGA(final int minutes, final double crossoverRate, final double mutationRate) {
 
         // create initial population
-        final List<Chromosome> population = tspPopulation.createPopulation(100);
+        final List<BitChromosome> population = tspPopulation.createPopulation(100);
         tspPopulation.sortByFitness();
+
+        System.out.println(tspPopulation.stat());
 
         new Thread(new Runnable() {
             int best = tspPopulation.calculateFitness(tspPopulation.getBest());
@@ -110,9 +113,9 @@ public class TSP {
                     // do crossover on the 'crossoverRate' % of the population
                     int crossovers = (int) (population.size() * crossoverRate);
                     for (int i = 0; i < crossovers; i++) {
-                        Chromosome[] parents = tspPopulation.selectParents(0.3);
-                        Chromosome child1 = tspEvolution.crossover(parents[0], parents[1]);
-                        Chromosome child2 = tspEvolution.crossover(parents[1], parents[0]);
+                        BitChromosome[] parents = tspPopulation.selectParents(0.5);
+                        BitChromosome child1 = tspEvolution.crossover(parents[0], parents[1]);
+                        BitChromosome child2 = tspEvolution.crossover(parents[1], parents[0]);
 
                         population.add(child1); population.add(child2);
                     }
@@ -120,7 +123,7 @@ public class TSP {
                     // do mutations on the 'mutationRate' % of the population
                     int mutations = (int) (population.size() * mutationRate);
                     for (int i = 0; i < mutations; i++) {
-                        Chromosome[] parents = tspPopulation.selectParents(1.0);
+                        BitChromosome[] parents = tspPopulation.selectParents(1.0);
                         population.add(tspEvolution.arrayMutate(parents[0]));
                         population.add(tspEvolution.arrayMutate(parents[1]));
                     }
@@ -140,11 +143,13 @@ public class TSP {
 
                 best = tspPopulation.calculateFitness(tspPopulation.getBest());
 
-                Chromosome bestRoute = tspPopulation.getBest();
+                BitChromosome bestRoute = tspPopulation.getBest();
                 long[] cities = tspEncoder.toArray(bestRoute);
 
                 System.out.println("Best score: " + best);
                 System.out.println(Arrays.toString(cities));
+
+                System.out.println(tspPopulation.stat());
             }
         }).run();
 
@@ -165,7 +170,7 @@ public class TSP {
         final Random randomRate = new Random();
 
         // create initial population
-        final List<Chromosome> population = tspPopulation.createPopulation(200);
+        final List<BitChromosome> population = tspPopulation.createPopulation(200);
 
         tspPopulation.sortByFitness();
 
@@ -188,14 +193,14 @@ public class TSP {
 
                     // generate next generation
                     // select two parents from among the best chromosomes
-                    Chromosome[] parents = tspPopulation.selectParents(selection);
+                    BitChromosome[] parents = tspPopulation.selectParents(selection);
 
                     // have sex and breed
                     int rate = randomRate.nextInt(100);
                     if (rate >= crossoverRate) {
                         // add random crossover childern from both parents
-                        Chromosome child1 = tspEvolution.crossover(parents[0], parents[1]);
-                        Chromosome child2 = tspEvolution.crossover(parents[1], parents[0]);
+                        BitChromosome child1 = tspEvolution.crossover(parents[0], parents[1]);
+                        BitChromosome child2 = tspEvolution.crossover(parents[1], parents[0]);
                         population.add(child1);
                         population.add(child2);
 
@@ -235,15 +240,18 @@ public class TSP {
                     // grow population to avoid convergence to local minima
                     int grow = 150;
                     while (population.size() < grow) population.add(tspEncoder.createRandomChromosome(random));
+                    tspPopulation.sortByFitness();
                 }
 
                 best = tspPopulation.calculateFitness(tspPopulation.getBest());
 
-                Chromosome bestRoute = tspPopulation.getBest();
+                BitChromosome bestRoute = tspPopulation.getBest();
                 long[] cities = tspEncoder.toArray(bestRoute);
 
                 System.out.println("Best score: " + best);
                 System.out.println(Arrays.toString(cities));
+
+                System.out.println(tspPopulation.stat());
             }
         }).run();
     }
@@ -263,7 +271,7 @@ public class TSP {
         final int populationSize = 200;
 
         // create initial population
-        final List<Chromosome> population = tspPopulation.createPopulation(populationSize);
+        final List<BitChromosome> population = tspPopulation.createPopulation(populationSize);
 
         tspPopulation.sortByFitness();
 
@@ -282,7 +290,7 @@ public class TSP {
                     // create a new generation
                     while (population.size() < populationSize) {
                         // velg to foreldre
-                        Chromosome[] parents = tspPopulation.selectParents();
+                        BitChromosome[] parents = tspPopulation.selectParents();
 
                         // one crossover child from each parent
                         population.add(tspEvolution.crossover(parents[0], parents[1]));
@@ -310,7 +318,7 @@ public class TSP {
 
                 best = tspPopulation.calculateFitness(tspPopulation.getBest());
 
-                Chromosome bestRoute = tspPopulation.getBest();
+                BitChromosome bestRoute = tspPopulation.getBest();
                 long[] cities = tspEncoder.toArray(bestRoute);
 
                 System.out.println("Best score: " + best);
@@ -334,12 +342,13 @@ public class TSP {
             public void run() {
                 int startCity = 0;
                 Integer[] cities = new Integer[15];
+                Integer[] cities2 = {12, 10, 8, 7, 6, 9, 14, 2, 13, 11, 3, 5, 4, 15, 1};
                 for (int i = 1; i <= cities.length; i++) {
                     cities[i-1] = new Integer(i);
                 }
-                System.out.println(Arrays.toString(cities));
+                System.out.println(Arrays.toString(cities2));
 
-                PermutationGenerator<Integer> pg = new PermutationGenerator<>(cities);
+                PermutationGenerator<Integer> pg = new PermutationGenerator<>(cities2);
                 long totalPermutations = pg.getTotalPermutations();
                 System.out.println("Total permutations: " + totalPermutations);
 

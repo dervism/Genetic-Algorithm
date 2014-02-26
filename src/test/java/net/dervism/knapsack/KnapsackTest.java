@@ -1,6 +1,6 @@
 package net.dervism.knapsack;
 
-import net.dervism.genericalgorithms.Chromosome;
+import net.dervism.genericalgorithms.BitChromosome;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,18 +14,18 @@ public class KnapsackTest {
     public void testCreateRandomPopulation() throws Exception {
         Knapsack ks = new Knapsack();
 
-        List<Chromosome> population = ks.createRandomPopulation(10);
+        List<BitChromosome> population = ks.createRandomPopulation(10);
 
-        Chromosome chromosome = population.get(0);
-        System.out.println(chromosome);
+        BitChromosome bitChromosome = population.get(0);
+        System.out.println(bitChromosome);
 
-        int fitness = ks.calcFitness(chromosome);
+        int fitness = ks.calcFitness(bitChromosome);
         System.out.println("Fitness: " + fitness);
 
-        int space = ks.calcSpace(chromosome);
+        int space = ks.calcSpace(bitChromosome);
         System.out.println("Space: " + space);
 
-        int items = ks.itemsInside(chromosome);
+        int items = ks.itemsInside(bitChromosome);
         System.out.println("Items: " + items);
     }
 

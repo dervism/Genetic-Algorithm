@@ -6,10 +6,10 @@ import java.util.Random;
  * Created by dervism on 14/02/14.
  */
 
-public interface Encoder {
+public interface Encoder<T> {
 
-    public Chromosome createChromosome(long... values);
+    public BitChromosome createChromosome(T... values);
 
-    public Chromosome createRandomChromosome(Random random);
+    public BitChromosome createRandomChromosome(Random random);
 
 }

@@ -8,14 +8,14 @@ import java.util.List;
  */
 public abstract class ChromosomePopulation implements Population {
 
-    public abstract List<Chromosome> createPopulation(int size);
+    public abstract List<BitChromosome> createPopulation(int size);
 
-    public List<Chromosome> createEmptyPopulation(int size) {
+    public List<BitChromosome> createEmptyPopulation(int size) {
 
-        List<Chromosome> pop = new ArrayList<Chromosome>(size);
+        List<BitChromosome> pop = new ArrayList<BitChromosome>(size);
 
         for (int i = 0; i < size; i++) {
-            pop.add(new Chromosome(0L));
+            pop.add(new BitChromosome(0L));
         }
 
         return pop;

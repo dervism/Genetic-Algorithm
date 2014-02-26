@@ -1,38 +1,38 @@
 package net.dervism.genericalgorithms;
 
 /**
- * A 64-bit immutable Chromosome that contains several genes.
+ * A 64-bit immutable BitChromosome that contains several genes.
  *
  * Implementation is based on the encoding proposed at the Chess Programming Wiki:
  * https://chessprogramming.wikispaces.com/Encoding+Moves
  *
  * Created by dervism on 27.12.13.
  */
-public class Chromosome {
+public class BitChromosome {
 
     public long genes;
 
-    public Chromosome() {
+    public BitChromosome() {
         this(0L);
     }
 
-    public Chromosome(long genes) {
+    public BitChromosome(long genes) {
         this.genes = genes;
     }
 
-    public Chromosome(Chromosome c) {
+    public BitChromosome(BitChromosome c) {
         this.genes |= c.genes;
     }
 
-    public Chromosome setNthBit(long n) {
-        Chromosome c = new Chromosome(genes | 1L << n);
-        return new Chromosome(c);
+    public BitChromosome setNthBit(long n) {
+        BitChromosome c = new BitChromosome(genes | 1L << n);
+        return new BitChromosome(c);
     }
 
     // ^ = exclusive or, xor
-    public Chromosome flipNthBit(long n) {
-        Chromosome c = new Chromosome(genes ^ (1L << n));
-        return new Chromosome(c);
+    public BitChromosome flipNthBit(long n) {
+        BitChromosome c = new BitChromosome(genes ^ (1L << n));
+        return new BitChromosome(c);
     }
 
     // if n'th bit is 1, then return true, otherwise false
@@ -40,9 +40,19 @@ public class Chromosome {
         return !((genes & (1L << n)) == 0);
     }
 
-    public Chromosome clearNthBit(long n) {
-        Chromosome c = new Chromosome(genes & ~(1L << n));
-        return new Chromosome(c);
+    public int getValue(int index, long mask, long shift) {
+        return (int)((genes >> (shift * index)) & mask);
+    }
+
+    public BitChromosome setValue(int index, long mask, long shift, long value) {
+        long updated = genes & ~(mask << (shift * index));
+        updated |= (value << (shift * index));
+        return new BitChromosome(updated);
+    }
+
+    public BitChromosome clearNthBit(long n) {
+        BitChromosome c = new BitChromosome(genes & ~(1L << n));
+        return new BitChromosome(c);
     }
 
     public byte[] toBytes() {
@@ -78,14 +88,14 @@ public class Chromosome {
               + (bytes[7] & 0xFF);
     }
 
-    // Chromosome class is immutable, however, if you want to allow
+    // BitChromosome class is immutable, however, if you want to allow
     // mutability then use this setter.
     private void setGenes(long genes) {
         this.genes = genes;
     }
 
     /**
-     * Prints the binary string representation of this Chromosome's bits
+     * Prints the binary string representation of this BitChromosome's bits
      * @return
      */
     @Override
