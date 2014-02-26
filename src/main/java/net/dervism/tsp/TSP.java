@@ -30,6 +30,7 @@ public class TSP {
     public TSP() {
         distanceMatrix = new int[16][16];
         createDistanceMatrix();
+        hardcodeShortestRoute();
 
         // mutation rate must be a number between 0.0 to 1.0
         // the higher the rate is, the more chromosomes will be mutated.
@@ -68,7 +69,25 @@ public class TSP {
             }
             System.out.println();
         }
+    }
 
+    public void hardcodeShortestRoute() {
+        distanceMatrix[0][2] = 10;
+        distanceMatrix[2][4] = 9;
+        distanceMatrix[4][6] = 11;
+        distanceMatrix[6][8] = 5;
+        distanceMatrix[8][10] = 7;
+        distanceMatrix[10][12] = 8;
+        distanceMatrix[12][14] = 13;
+        distanceMatrix[14][1] = 2;
+        distanceMatrix[1][3] = 3;
+        distanceMatrix[3][5] = 15;
+        distanceMatrix[5][7] = 12;
+        distanceMatrix[7][9] = 16;
+        distanceMatrix[9][11] = 14;
+        distanceMatrix[11][13] = 6;
+        distanceMatrix[13][15] = 4;
+        distanceMatrix[15][0] = 1;
     }
 
     /**
