@@ -71,6 +71,11 @@ public class TSP {
         }
     }
 
+    /**
+     * Use this method to verify the results of the GA algortihms in this class.
+     * Hardcoding a shortes route here, among the millions of possible routes, will
+     * tell if how good the algorithms preform.
+     */
     public void hardcodeShortestRoute() {
         distanceMatrix[0][2] = 10;
         distanceMatrix[2][4] = 9;
@@ -102,9 +107,6 @@ public class TSP {
      *
      * - I can use less chromosomes (only 100 are created initially)
      * - I never add additional random chromosomes
-     *
-     * Best solutions so far:
-     * Fitness: 303, route: [0, 12, 10, 8, 7, 6, 9, 14, 2, 13, 11, 3, 5, 4, 15, 1]
      *
      * @param minutes
      * @param crossoverRate
