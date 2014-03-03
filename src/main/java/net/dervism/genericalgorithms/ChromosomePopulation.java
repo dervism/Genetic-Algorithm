@@ -4,21 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * An abstract class defining a population.
+ *
  * Created by dervism on 14/02/14.
  */
-public abstract class ChromosomePopulation implements Population {
+public abstract class ChromosomePopulation<T extends Chromosome> implements Population<T> {
 
-    public abstract List<BitChromosome> createPopulation(int size);
+    protected List<T> population;
 
-    public List<BitChromosome> createEmptyPopulation(int size) {
+    public ChromosomePopulation() {
+        this.population = new ArrayList<>();
+    }
 
-        List<BitChromosome> pop = new ArrayList<BitChromosome>(size);
+    public abstract List<T> createPopulation(int size);
 
-        for (int i = 0; i < size; i++) {
-            pop.add(new BitChromosome(0L));
-        }
+    @Override
+    public synchronized void selectBest(int reduce) {
+        sortByFitness();
 
-        return pop;
+        int newSize = population.size() - reduce;
+
+        do {
+            population.remove(population.size()-1);
+        } while (population.size() > newSize);
+    }
+
+    @Override
+    public T getBest() {
+        return population.get(0);
     }
 
 }

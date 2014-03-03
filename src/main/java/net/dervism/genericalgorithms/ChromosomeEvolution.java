@@ -6,7 +6,7 @@ package net.dervism.genericalgorithms;
  * Created by dervism on 14/02/14.
  *
  */
-public abstract class ChromosomeEvolution implements Evolution {
+public abstract class ChromosomeEvolution implements Evolution<BitChromosome> {
 
     @Override
     public BitChromosome mutate(BitChromosome bitChromosome) {

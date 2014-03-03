@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 /**
  * Created by dervism on 14/02/14.
  */
-public class TSPEvolution implements Evolution {
+public class TSPEvolution implements Evolution<BitChromosome> {
 
     private TSP tsp;
 
@@ -19,11 +19,14 @@ public class TSPEvolution implements Evolution {
     public TSPEvolution(TSP tsp) {
         this.tsp = tsp;
 
+        // no seed in this randomizer so we get different
+        // evolution on every execution
         this.random = new SecureRandom();
     }
 
     /**
-     * The simplest method for creating a new child.
+     * The simplest method for creating a new child. Two
+     * random indexes are selected and switched places.
      *
      * @param parent
      * @return
@@ -55,6 +58,13 @@ public class TSPEvolution implements Evolution {
     }
 
 
+    /**
+     * This version of the mutation method is faster then
+     * version that uses bitshifting.
+     *
+     * @param bitChromosome
+     * @return
+     */
     public BitChromosome arrayMutate(BitChromosome bitChromosome) {
         int ix = 1 + random.nextInt(cityCount);
         int iy = 1 + random.nextInt(cityCount);
@@ -76,6 +86,18 @@ public class TSPEvolution implements Evolution {
         return tsp.tspEncoder.createChromosome(array);
     }
 
+    /**
+     * Crossover method that will create a new chromosome which is
+     * a combination of two parent chromosomes. In this version
+     * the mother chromosome is favoured. The crossover-point in
+     * this method is selected after several executes of the
+     * GA in order to find the most efficient parameters.
+     *
+     *
+     * @param mother
+     * @param father
+     * @return
+     */
     @Override
     public synchronized BitChromosome crossover(BitChromosome mother, BitChromosome father) {
 

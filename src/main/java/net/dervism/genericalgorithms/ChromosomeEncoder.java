@@ -7,7 +7,7 @@ import java.util.Random;
  *
  * Created by dervism on 28.12.13.
  */
-public class ChromosomeEncoder implements Encoder<Long> {
+public class ChromosomeEncoder implements Encoder<Long, BitChromosome> {
 
     // the start index
     private long first_val_shift = 7;

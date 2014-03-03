@@ -8,7 +8,7 @@ package net.dervism.genericalgorithms;
  *
  * Created by dervism on 27.12.13.
  */
-public class BitChromosome {
+public class BitChromosome implements Chromosome {
 
     public long genes;
 

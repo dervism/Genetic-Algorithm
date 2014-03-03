@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Created by dervism on 14/02/14.
  */
-public class TSPPopulation implements Population {
+public class TSPPopulation implements Population<BitChromosome> {
 
     private List<BitChromosome> population;
 
@@ -20,7 +20,7 @@ public class TSPPopulation implements Population {
 
     @Override
     public List<BitChromosome> createPopulation(int size) {
-        population = new ArrayList<BitChromosome>(size*4);
+        population = new ArrayList<>(size*4);
 
         for (int i = 0; i < size; i++) {
             BitChromosome bitChromosome = tsp.tspEncoder.createRandomChromosome(tsp.random);
@@ -35,15 +35,7 @@ public class TSPPopulation implements Population {
      * bad ones.
      */
     public void selectBest(double selectionRate) {
-        int reduceSize = (int) (population.size() * selectionRate);
-
-        sortByFitness();
-
-        int newSize = population.size() - reduceSize;
-
-        do {
-            population.remove(population.size()-1);
-        } while (population.size() > newSize);
+        selectBest((int) (population.size() * selectionRate));
     }
 
     public synchronized void selectBest(int reduce) {

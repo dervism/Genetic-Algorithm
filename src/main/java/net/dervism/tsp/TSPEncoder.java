@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Created by dervism on 13/02/14.
  */
-public class TSPEncoder implements Encoder<Long> {
+public class TSPEncoder implements Encoder<Long, BitChromosome> {
 
     // the start index
     private long shift = 4;
