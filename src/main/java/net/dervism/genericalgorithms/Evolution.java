@@ -8,8 +8,8 @@ package net.dervism.genericalgorithms;
  */
 public interface Evolution<T extends Chromosome> {
 
-    public BitChromosome mutate(T chromosome);
+    public T mutate(T chromosome);
 
-    public BitChromosome crossover(T left, T right);
+    public T crossover(T left, T right);
 
 }

@@ -162,4 +162,8 @@ public class TSPPopulation implements Population<BitChromosome> {
         this.tsp = tsp;
     }
 
+    @Override
+    public int size() {
+        return population.size();
+    }
 }

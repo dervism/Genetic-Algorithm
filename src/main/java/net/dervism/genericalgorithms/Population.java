@@ -21,4 +21,8 @@ public interface Population<T extends Chromosome> {
 
     public T getBest();
 
+    public int size();
+
+    public void add(T chromosome);
+
 }
