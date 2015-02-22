@@ -18,37 +18,19 @@ public abstract class ChromosomePopulation<T extends Chromosome> implements Popu
 
     protected List<T> population;
 
-    /**
-     * Should use the MersenneTwisterRNG random generator as default.
-     * Uses the SecureRandom as a fall-back solution.
-     */
-    protected Random random;
-
     public ChromosomePopulation() {
         this.population = new ArrayList<>();
-        try {
-            random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
-        } catch (SeedException e) {
-            random = new SecureRandom();
-        }
     }
 
     public abstract List<T> createPopulation(int size);
 
     @Override
     public synchronized void selectBest(int reduce) {
-        sortByFitness();
-
         int newSize = population.size() - reduce;
 
         do {
             population.remove(population.size()-1);
         } while (population.size() > newSize);
-    }
-
-    @Override
-    public T getBest() {
-        return population.get(0);
     }
 
     @Override

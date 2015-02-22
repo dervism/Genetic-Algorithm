@@ -1,6 +1,7 @@
 package net.dervism.tsp;
 
 import net.dervism.genericalgorithms.BitChromosome;
+import net.dervism.genericalgorithms.FitnessEvaluator;
 import org.uncommons.maths.combinatorics.PermutationGenerator;
 
 import java.security.SecureRandom;
@@ -14,13 +15,13 @@ import java.util.Random;
  */
 public class TSP {
 
-    public int[][] distanceMatrix;
-
     private TSPPopulation tspPopulation;
 
     public TSPEvolution tspEvolution;
 
     public TSPEncoder tspEncoder;
+
+    public TSPFitnessEvalutor fitnessEvaluator;
 
     public SecureRandom random = new SecureRandom("random".getBytes());
 
@@ -28,100 +29,30 @@ public class TSP {
     private int crossoverRate;
 
     public TSP() {
-        distanceMatrix = new int[16][16];
-        createDistanceMatrix();
-        hardcodeShortestRoute();
-
         // mutation rate must be a number between 0.0 to 1.0
         // the higher the rate is, the more chromosomes will be mutated.
         mutationRate = 100 - (int)(100 * 0.01);
         crossoverRate = 100 - (int)(100 * 0.95);
 
+        fitnessEvaluator = new TSPFitnessEvalutor(16);
         tspEncoder = new TSPEncoder();
-        tspPopulation = new TSPPopulation(this);
-        tspEvolution = new TSPEvolution(this);
-    }
-
-    public void createDistanceMatrix() {
-        Random randomDistance = new Random(4682);
-
-        // create random distances
-        for (int i = 0; i < distanceMatrix.length; i++) {
-            for (int j = 0; j < distanceMatrix[i].length; j++) {
-                distanceMatrix[i][j] = 10 + randomDistance.nextInt(100);
-            }
-        }
-
-        System.out.println("\t ");
-
-        // set distance from a city to itself to 0
-        for (int i = 0; i < distanceMatrix.length; i++) {
-            System.out.print((i == 0 ? " \t\t" : "") + i + "\t|\t");
-            distanceMatrix[i][i] = 0;
-        }
-
-        System.out.println();
-
-        for (int i = 0; i < distanceMatrix.length; i++) {
-            System.out.print((i < 10 ? " ":"") + i + " | \t");
-            for (int j = 0; j < distanceMatrix[i].length; j++) {
-                System.out.print(distanceMatrix[i][j] + "\t|\t");
-            }
-            System.out.println();
-        }
+        tspPopulation = new TSPPopulation();
+        tspEvolution = new TSPEvolution();
     }
 
     /**
-     * Use this method to verify the results of the GA algortihms in this class.
-     * Hardcoding a shortes route here, among the millions of possible routes, will
-     * tell if how good the algorithms preform.
+     * Countinuesly increases population size
+     * to avoid convergence to local minima.
      */
-    public void hardcodeShortestRoute() {
-        distanceMatrix[0][2] = 10;
-        distanceMatrix[2][4] = 9;
-        distanceMatrix[4][6] = 11;
-        distanceMatrix[6][8] = 5;
-        distanceMatrix[8][10] = 7;
-        distanceMatrix[10][12] = 8;
-        distanceMatrix[12][14] = 13;
-        distanceMatrix[14][1] = 2;
-        distanceMatrix[1][3] = 3;
-        distanceMatrix[3][5] = 15;
-        distanceMatrix[5][7] = 12;
-        distanceMatrix[7][9] = 16;
-        distanceMatrix[9][11] = 14;
-        distanceMatrix[11][13] = 6;
-        distanceMatrix[13][15] = 4;
-        distanceMatrix[15][0] = 1;
-    }
-
-    /**
-     * The strategy in this algorithm keeps the population size at the same
-     * level without adding any random chromosomes in any cycle. Instead, a
-     * crossover rate and a mutation rate is used to transform only the given
-     * percentage of the population. The selection strategy simply removes as
-     * many chromosomes that was added. This way, the population should get
-     * fitter with every cycle.
-     *
-     * This implementation has shown that:
-     *
-     * - I can use less chromosomes (only 100 are created initially)
-     * - I never add additional random chromosomes
-     *
-     * @param minutes
-     * @param crossoverRate
-     * @param mutationRate
-     */
-    public  void evolutionaryGA(final int minutes, final double crossoverRate, final double mutationRate) {
+    public void evolutionaryIncreasingGA(final int minutes, final double crossoverRate, final double mutationRate,
+                                         int populationSize, final double reductionPercent) {
 
         // create initial population
-        final List<BitChromosome> population = tspPopulation.createPopulation(100);
-        tspPopulation.sortByFitness();
-
-        System.out.println(tspPopulation.stat());
+        final List<BitChromosome> population = tspPopulation.createPopulation(populationSize);
+        fitnessEvaluator.sort(tspPopulation);
 
         new Thread(new Runnable() {
-            int best = tspPopulation.calculateFitness(tspPopulation.getBest());
+            int best = fitnessEvaluator.evalute(tspPopulation);
             int generation = 1;
 
             long start = System.currentTimeMillis();
@@ -144,135 +75,106 @@ public class TSP {
                     // do mutations on the 'mutationRate' % of the population
                     int mutations = (int) (population.size() * mutationRate);
                     for (int i = 0; i < mutations; i++) {
-                        BitChromosome[] parents = tspPopulation.selectParents(1.0);
+                        BitChromosome[] parents = tspPopulation.selectParents(0.3);
                         population.add(tspEvolution.arrayMutate(parents[0]));
                         population.add(tspEvolution.arrayMutate(parents[1]));
                     }
 
                     // select the best chromosomes from this generation
-                    tspPopulation.selectBest( ((crossovers * 2) + (mutations * 2)) );
+                    fitnessEvaluator.sort(tspPopulation);
+                    tspPopulation.selectBest(reductionPercent);
 
-                    int bestFromGeneration = tspPopulation.calculateFitness(tspPopulation.getBest());
+                    int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
-                        System.out.println("Found better route in generation " + generation + " with score " + best
+                        System.out.println("Generation " + generation + " with score " + best
                                 + ", population size " + population.size());
                     }
 
                     generation++;
                 }
 
-                best = tspPopulation.calculateFitness(tspPopulation.getBest());
+                best = fitnessEvaluator.evalute(tspPopulation);
 
-                BitChromosome bestRoute = tspPopulation.getBest();
+                BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
 
                 System.out.println("Best score: " + best);
                 System.out.println(Arrays.toString(cities));
-
-                System.out.println(tspPopulation.stat());
             }
         }).run();
-
     }
 
     /**
-     * NB: Experimental version!
-     * In this version of the TSP algorithm, I use the percentage rates to determine
-     * if crossovers and mutations should occur or not. The strategy I use in this
-     * version will always create a new generation where the children is some sort
-     * of random variation of the best chromosomes from previous generation. After
-     * selecting the best and reducing the population, random data are injected and
-     * the process repeats.
+     * The strategy in this algorithm keeps the population size at the same
+     * level without adding any random chromosomes in any cycle. Instead, a
+     * crossover rate and a mutation rate is used to transform only the given
+     * percentage of the population. The selection strategy simply removes as
+     * many chromosomes that was added. This way, the population should get
+     * fitter with every cycle.
      *
-     * @param minutes Number of minutes to run the simulation
+     * This implementation has shown that:
+     *
+     * - I can use less chromosomes (only 100 are created initially)
+     * - I never add additional random chromosomes
+     *
      */
-    public void runRandomGreedyCrossOverGA(final int minutes) {
-        final Random randomRate = new Random();
+    public void evolutionaryGA(final int minutes, final double crossoverRate, final double mutationRate, int populationSize) {
 
         // create initial population
-        final List<BitChromosome> population = tspPopulation.createPopulation(200);
-
-        tspPopulation.sortByFitness();
-
-        // overriding the default values
-        mutationRate = 100 - (int)(100 * 0.05);
-        crossoverRate = 100 - (int)(100 * 0.95);
+        final List<BitChromosome> population = tspPopulation.createPopulation(populationSize);
+        fitnessEvaluator.sort(tspPopulation);
 
         new Thread(new Runnable() {
-            int best = tspPopulation.calculateFitness(tspPopulation.getBest());
+            int best = fitnessEvaluator.evalute(tspPopulation);
             int generation = 1;
-            boolean next = true;
 
             long start = System.currentTimeMillis();
             long end = start + (minutes * 60000);
-            double selection = 0.8;
 
             @Override
             public void run() {
-                while(next && (System.currentTimeMillis() < end)) {
+                while(System.currentTimeMillis() < end) {
 
-                    // generate next generation
-                    // select two parents from among the best chromosomes
-                    BitChromosome[] parents = tspPopulation.selectParents(selection);
-
-                    // have sex and breed
-                    int rate = randomRate.nextInt(100);
-                    if (rate >= crossoverRate) {
-                        // add random crossover childern from both parents
+                    // do crossover on the 'crossoverRate' % of the population
+                    int crossovers = (int) (population.size() * crossoverRate);
+                    for (int i = 0; i < crossovers; i++) {
+                        BitChromosome[] parents = tspPopulation.selectParents(0.5);
                         BitChromosome child1 = tspEvolution.crossover(parents[0], parents[1]);
                         BitChromosome child2 = tspEvolution.crossover(parents[1], parents[0]);
-                        population.add(child1);
-                        population.add(child2);
 
-                        // add the best parent with a mutant
-                        population.add(tspEvolution.crossover(tspPopulation.getBest(), tspEvolution.arrayMutate(parents[0])));
-                        population.add(tspEvolution.crossover(tspPopulation.getBest(), tspEvolution.arrayMutate(parents[1])));
-
-                        // cross the best parent with a mutated child
-                        population.add(tspEvolution.crossover(tspPopulation.getBest(), tspEvolution.arrayMutate(child1)));
-                        population.add(tspEvolution.crossover(tspPopulation.getBest(), tspEvolution.arrayMutate(child2)));
-
-                        population.add(tspEvolution.crossover(tspEvolution.arrayMutate(child1), tspPopulation.getBest()));
-                        population.add(tspEvolution.crossover(tspEvolution.arrayMutate(child2), tspPopulation.getBest()));
+                        population.add(child1); population.add(child2);
                     }
 
-                    // mutate the parents, however this will not
-                    // happend very often as the rate has to be very low.
-                    rate = randomRate.nextInt(100);
-                    if (rate >= mutationRate) {
-                        // add mutaded parents
+                    // do mutations on the 'mutationRate' % of the population
+                    int mutations = (int) (population.size() * mutationRate);
+                    for (int i = 0; i < mutations; i++) {
+                        BitChromosome[] parents = tspPopulation.selectParents(0.3);
                         population.add(tspEvolution.arrayMutate(parents[0]));
                         population.add(tspEvolution.arrayMutate(parents[1]));
                     }
 
                     // select the best chromosomes from this generation
-                    // we have to experiment with the selection percentage
-                    tspPopulation.selectBest(0.3);
+                    fitnessEvaluator.sort(tspPopulation);
+                    tspPopulation.selectBest( ((crossovers * 2) + (mutations * 2)) );
 
-                    int bestFromGeneration = tspPopulation.calculateFitness(tspPopulation.getBest());
+                    int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
                         System.out.println("Found better route in generation " + generation + " with score " + best
                                 + ", population size " + population.size());
                     }
-                    generation++;
 
-                    // grow population to avoid convergence to local minima
-                    int grow = 150;
-                    while (population.size() < grow) population.add(tspEncoder.createRandomChromosome(random));
-                    tspPopulation.sortByFitness();
+                    generation++;
                 }
 
-                best = tspPopulation.calculateFitness(tspPopulation.getBest());
+                best = fitnessEvaluator.evalute(tspPopulation);
 
-                BitChromosome bestRoute = tspPopulation.getBest();
+                BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
 
                 System.out.println("Best score: " + best);
                 System.out.println(Arrays.toString(cities));
-
-                System.out.println(tspPopulation.stat());
             }
         }).run();
     }
@@ -294,10 +196,10 @@ public class TSP {
         // create initial population
         final List<BitChromosome> population = tspPopulation.createPopulation(populationSize);
 
-        tspPopulation.sortByFitness();
+        fitnessEvaluator.sort(tspPopulation);
 
         new Thread(new Runnable() {
-            int best = tspPopulation.calculateFitness(tspPopulation.getBest());
+            int best = fitnessEvaluator.evalute(tspPopulation);
             int generation = 1;
             boolean next = true;
 
@@ -322,13 +224,14 @@ public class TSP {
                         population.add(tspEncoder.createRandomChromosome(random));
 
                         // the best from previous generation, but randomized
-                        population.add(tspEvolution.arrayMutate(tspPopulation.getBest()));
+                        population.add(tspEvolution.arrayMutate(fitnessEvaluator.getBest(tspPopulation)));
                     }
 
                     // select the best
+                    fitnessEvaluator.sort(tspPopulation);
                     tspPopulation.selectBest(0.3);
 
-                    int bestFromGeneration = tspPopulation.calculateFitness(tspPopulation.getBest());
+                    int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
                         System.out.println("Found better route in generation " + generation + " with score " + best
@@ -337,9 +240,9 @@ public class TSP {
                     generation++;
                 }
 
-                best = tspPopulation.calculateFitness(tspPopulation.getBest());
+                best = fitnessEvaluator.evalute(tspPopulation);
 
-                BitChromosome bestRoute = tspPopulation.getBest();
+                BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
 
                 System.out.println("Best score: " + best);
@@ -385,7 +288,7 @@ public class TSP {
                         array[i] = route.get(i);
                     }
 
-                    int fitness = tspPopulation.calculateArrayFitness(array);
+                    int fitness = fitnessEvaluator.calculateArrayFitness(array);
                     if (fitness < best) {
                         best = fitness;
                         bestRoute = array;

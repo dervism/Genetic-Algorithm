@@ -1,5 +1,12 @@
 package net.dervism.genericalgorithms;
 
+import org.uncommons.maths.random.MersenneTwisterRNG;
+import org.uncommons.maths.random.SecureRandomSeedGenerator;
+import org.uncommons.maths.random.SeedException;
+
+import java.security.SecureRandom;
+import java.util.Random;
+
 /**
  * This class handles the evolution of bit-encoded chromosomes.
  *
@@ -7,6 +14,20 @@ package net.dervism.genericalgorithms;
  *
  */
 public abstract class ChromosomeEvolution implements Evolution<BitChromosome> {
+
+    /**
+     * Should use the MersenneTwisterRNG random generator as default.
+     * Uses the SecureRandom as a fall-back solution.
+     */
+    protected Random random;
+
+    public ChromosomeEvolution() {
+        try {
+            random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
+        } catch (SeedException e) {
+            random = new SecureRandom();
+        }
+    }
 
     @Override
     public BitChromosome mutate(BitChromosome bitChromosome) {
@@ -18,5 +39,7 @@ public abstract class ChromosomeEvolution implements Evolution<BitChromosome> {
         return null;
     }
 
-
+    public void setRandom(Random random) {
+        this.random = random;
+    }
 }

@@ -12,16 +12,13 @@ public class TSPPopulationTest {
     @Test
     public void testSelectBest() throws Exception {
         TSP tsp = new TSP();
-        TSPEncoder tspEncoder = new TSPEncoder();
-        TSPEvolution tspEvolution = new TSPEvolution(tsp);
-        TSPPopulation tspPopulation = new TSPPopulation(tsp);
-        tspPopulation.setTsp(tsp);
-        Random random = new Random(4567);
+        TSPPopulation tspPopulation = new TSPPopulation();
+        TSPFitnessEvalutor tspFitnessEvalutor = new TSPFitnessEvalutor(16);
 
         tspPopulation.createPopulation(30);
+        tspFitnessEvalutor.sort(tspPopulation);
         tspPopulation.selectBest(0.5);
-        System.out.println(tspPopulation.stat());
-
+        System.out.println(tspFitnessEvalutor.stat(tspPopulation.list()));
     }
 
     @Test

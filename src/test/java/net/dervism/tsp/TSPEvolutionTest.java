@@ -16,7 +16,7 @@ public class TSPEvolutionTest {
     @Test
     public void testMutate() throws Exception {
         TSPEncoder tspEncoder = new TSPEncoder();
-        TSPEvolution tspEvolution = new TSPEvolution(new TSP());
+        TSPEvolution tspEvolution = new TSPEvolution();
         Random random = new Random(4567);
 
         // create a randomized bit sequenze
@@ -49,10 +49,8 @@ public class TSPEvolutionTest {
     @Test
     public  void testBenchmarkMutation() {
         TSP tsp = new TSP();
-        TSPEncoder tspEncoder = new TSPEncoder();
-        TSPEvolution tspEvolution = new TSPEvolution(tsp);
-        TSPPopulation tspPopulation = new TSPPopulation(tsp);
-        Random random = new Random(4567);
+        TSPEvolution tspEvolution = new TSPEvolution();
+        TSPPopulation tspPopulation = new TSPPopulation();
 
         List<BitChromosome> population = tspPopulation.createPopulation(2000);
 
@@ -76,7 +74,7 @@ public class TSPEvolutionTest {
     @Test
     public void testCrossover() throws Exception {
         TSPEncoder tspEncoder = new TSPEncoder();
-        TSPEvolution tspEvolution = new TSPEvolution(new TSP());
+        TSPEvolution tspEvolution = new TSPEvolution();
 
         BitChromosome mother = tspEncoder.createRandomChromosome(new Random());
         long[] m = tspEncoder.toArray(mother);

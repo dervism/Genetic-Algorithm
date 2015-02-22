@@ -1,8 +1,10 @@
 package net.dervism.tsp;
 
 import net.dervism.genericalgorithms.BitChromosome;
+import net.dervism.genericalgorithms.FitnessEvaluator;
 import net.dervism.genericalgorithms.Population;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -12,10 +14,17 @@ public class TSPPopulation implements Population<BitChromosome> {
 
     private List<BitChromosome> population;
 
-    private TSP tsp;
+    private TSPEncoder tspEncoder;
 
-    public TSPPopulation(TSP tsp) {
-        this.tsp = tsp;
+    private SecureRandom random;
+
+    public TSPPopulation() {
+        this.tspEncoder = new TSPEncoder();
+        random = new SecureRandom();
+    }
+
+    public void setRandom(SecureRandom random) {
+        this.random = random;
     }
 
     @Override
@@ -23,7 +32,7 @@ public class TSPPopulation implements Population<BitChromosome> {
         population = new ArrayList<>(size*4);
 
         for (int i = 0; i < size; i++) {
-            BitChromosome bitChromosome = tsp.tspEncoder.createRandomChromosome(tsp.random);
+            BitChromosome bitChromosome = tspEncoder.createRandomChromosome(random);
             population.add(bitChromosome);
         }
 
@@ -39,8 +48,6 @@ public class TSPPopulation implements Population<BitChromosome> {
     }
 
     public synchronized void selectBest(int reduce) {
-        sortByFitness();
-
         int newSize = population.size() - reduce;
 
         do {
@@ -60,14 +67,19 @@ public class TSPPopulation implements Population<BitChromosome> {
 
         int selection = (int) (population.size() * selectionRate);
 
-        int mother = tsp.random.nextInt(selection);
+        int mother = random.nextInt(selection);
+
+        if (mother > population.size()) {
+            throw new IllegalArgumentException("Ops");
+        }
+
         parents[0] = population.get(mother);
 
-        int father = tsp.random.nextInt(selection);
+        int father = random.nextInt(selection);
 
         if (mother == father) {
             do {
-                father = tsp.random.nextInt(selection);
+                father = random.nextInt(selection);
             } while (mother == father);
         }
         parents[1] = population.get(father);
@@ -83,83 +95,14 @@ public class TSPPopulation implements Population<BitChromosome> {
         population.add(bitChromosome);
     }
 
-    public BitChromosome getBest() {
-        return population.get(0);
+    @Override
+    public BitChromosome get(int index) {
+        return population.get(index);
     }
 
-    public void sortByFitness() {
-        Collections.sort(population, new ChromosomeComparator());
-    }
-
-    public class ChromosomeComparator implements Comparator<BitChromosome> {
-        @Override
-        public int compare(BitChromosome o1, BitChromosome o2) {
-            Integer fitness1 = calculateFitness(o1);
-            Integer fitness2 = calculateFitness(o2);
-            return fitness1.compareTo(fitness2);
-        }
-    }
-
-    public int calculateFitness(BitChromosome bitChromosome) {
-        int fitness = 0;
-
-        long[] sequence = tsp.tspEncoder.toArray(bitChromosome);
-
-        for (int i = 1; i < sequence.length; i++) {
-            int cityFrom = (int)sequence[i-1];
-            int cityTo = (int)sequence[i];
-            fitness += tsp.distanceMatrix[cityFrom][cityTo];
-        }
-
-        // add distance back to start city
-        int lastCity = (int)sequence[sequence.length-1];
-        fitness += tsp.distanceMatrix[lastCity][(int)sequence[0]];
-
-        return fitness;
-    }
-
-    /**
-     * Method to calculate distance without having a BitChromosome.
-     * This can be used to brute force a solution.
-     *
-     * @param array
-     * @return
-     */
-    public int calculateArrayFitness(int[] array) {
-        int fitness = 0;
-
-        int[] sequence = array;
-
-        for (int i = 1; i < sequence.length; i++) {
-            int cityFrom = sequence[i-1];
-            int cityTo = sequence[i];
-            fitness += tsp.distanceMatrix[cityFrom][cityTo];
-        }
-
-        // add distance back to start city
-        int lastCity = sequence[sequence.length-1];
-        fitness += tsp.distanceMatrix[lastCity][sequence[0]];
-
-        return fitness;
-    }
-
-    /**
-     * Prints out stats about the population.
-     *
-     * @return
-     */
-    public String stat() {
-        String ret = "";
-        int c = 1;
-        for (BitChromosome bitChromosome : population) {
-            ret += c++ + " " + calculateFitness(bitChromosome) + ", ";
-        }
-
-        return ret;
-    }
-
-    public void setTsp(TSP tsp) {
-        this.tsp = tsp;
+    @Override
+    public List<BitChromosome> list() {
+        return population;
     }
 
     @Override

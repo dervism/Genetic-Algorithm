@@ -1,5 +1,6 @@
 package net.dervism.genericalgorithms;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -13,16 +14,14 @@ public interface Population<T extends Chromosome> {
 
     public T[] selectParents(double selectionRate);
 
-    public void sortByFitness();
+    public void selectBest(double reduce);
 
-    public int calculateFitness(T chromosome);
-
-    public void selectBest(int reduce);
-
-    public T getBest();
+    public List<T> list();
 
     public int size();
 
     public void add(T chromosome);
+
+    public T get(int index);
 
 }

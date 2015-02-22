@@ -10,14 +10,14 @@ import java.security.SecureRandom;
  */
 public class TSPEvolution implements Evolution<BitChromosome> {
 
-    private TSP tsp;
+    private TSPEncoder tspEncoder;
 
     private SecureRandom random;
 
     private final int cityCount = 15;
 
-    public TSPEvolution(TSP tsp) {
-        this.tsp = tsp;
+    public TSPEvolution() {
+        this.tspEncoder = new TSPEncoder();
 
         // no seed in this randomizer so we get different
         // evolution on every execution
@@ -45,14 +45,14 @@ public class TSPEvolution implements Evolution<BitChromosome> {
         }
 
         // get the values from each index
-        long i = tsp.tspEncoder.getValue(parent, ix);
-        long j = tsp.tspEncoder.getValue(parent, iy);
+        long i = tspEncoder.getValue(parent, ix);
+        long j = tspEncoder.getValue(parent, iy);
 
         BitChromosome bitChromosome = new BitChromosome(parent);
 
         // swap values
-        tsp.tspEncoder.setValue(ix, j, bitChromosome);
-        tsp.tspEncoder.setValue(iy, i, bitChromosome);
+        tspEncoder.setValue(ix, j, bitChromosome);
+        tspEncoder.setValue(iy, i, bitChromosome);
 
         return bitChromosome;
     }
@@ -77,13 +77,13 @@ public class TSPEvolution implements Evolution<BitChromosome> {
         }
 
         // convert bitChromosome to array
-        long[] array = tsp.tspEncoder.toArray(bitChromosome);
+        long[] array = tspEncoder.toArray(bitChromosome);
 
         // swap values in the array
-        tsp.tspEncoder.swap(array, ix, iy);
+        tspEncoder.swap(array, ix, iy);
 
         // encode the array into the bitChromosome again
-        return tsp.tspEncoder.createChromosome(array);
+        return tspEncoder.createChromosome(array);
     }
 
     /**
@@ -101,8 +101,8 @@ public class TSPEvolution implements Evolution<BitChromosome> {
     @Override
     public synchronized BitChromosome crossover(BitChromosome mother, BitChromosome father) {
 
-        long[] left = tsp.tspEncoder.toArray(mother);
-        long[] right = tsp.tspEncoder.toArray(father);
+        long[] left = tspEncoder.toArray(mother);
+        long[] right = tspEncoder.toArray(father);
         long[] child = new long[left.length];
 
         // counter for values from mother
@@ -142,7 +142,7 @@ public class TSPEvolution implements Evolution<BitChromosome> {
             }
         }
 
-        return tsp.tspEncoder.createChromosome(child);
+        return tspEncoder.createChromosome(child);
     }
 
 }

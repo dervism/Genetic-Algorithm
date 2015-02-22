@@ -55,6 +55,17 @@ public class BitChromosome implements Chromosome {
         return new BitChromosome(c);
     }
 
+    public long[] toArray() {
+        return toArray(0xFL, 4);
+    }
+    public long[] toArray(long mask, long shift) {
+        long[] content = new long[16];
+        for (int i = 0; i < content.length; i++) {
+            content[i] = getValue(i, mask, shift);
+        }
+        return content;
+    }
+
     public byte[] toBytes() {
         return longToByte(genes);
     }
