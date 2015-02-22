@@ -2,8 +2,12 @@ package net.dervism.tsp;
 
 import net.dervism.genericalgorithms.BitChromosome;
 import net.dervism.genericalgorithms.Evolution;
+import org.uncommons.maths.random.MersenneTwisterRNG;
+import org.uncommons.maths.random.SecureRandomSeedGenerator;
+import org.uncommons.maths.random.SeedException;
 
 import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * Created by dervism on 14/02/14.
@@ -12,7 +16,7 @@ public class TSPEvolution implements Evolution<BitChromosome> {
 
     private TSPEncoder tspEncoder;
 
-    private SecureRandom random;
+    private Random random;
 
     private final int cityCount = 15;
 
@@ -21,7 +25,11 @@ public class TSPEvolution implements Evolution<BitChromosome> {
 
         // no seed in this randomizer so we get different
         // evolution on every execution
-        this.random = new SecureRandom();
+        try {
+            random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
+        } catch (SeedException e) {
+            random = new SecureRandom();
+        }
     }
 
     /**

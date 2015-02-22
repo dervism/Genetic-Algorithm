@@ -3,6 +3,9 @@ package net.dervism.tsp;
 import net.dervism.genericalgorithms.BitChromosome;
 import net.dervism.genericalgorithms.FitnessEvaluator;
 import net.dervism.genericalgorithms.Population;
+import org.uncommons.maths.random.MersenneTwisterRNG;
+import org.uncommons.maths.random.SecureRandomSeedGenerator;
+import org.uncommons.maths.random.SeedException;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -16,11 +19,15 @@ public class TSPPopulation implements Population<BitChromosome> {
 
     private TSPEncoder tspEncoder;
 
-    private SecureRandom random;
+    private Random random;
 
     public TSPPopulation() {
         this.tspEncoder = new TSPEncoder();
-        random = new SecureRandom();
+        try {
+            random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
+        } catch (SeedException e) {
+            random = new SecureRandom();
+        }
     }
 
     public void setRandom(SecureRandom random) {

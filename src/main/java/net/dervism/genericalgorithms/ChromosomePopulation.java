@@ -24,7 +24,10 @@ public abstract class ChromosomePopulation<T extends Chromosome> implements Popu
 
     public abstract List<T> createPopulation(int size);
 
-    @Override
+    public void selectBest(double selectionRate) {
+        selectBest((int) (population.size() * selectionRate));
+    }
+
     public synchronized void selectBest(int reduce) {
         int newSize = population.size() - reduce;
 

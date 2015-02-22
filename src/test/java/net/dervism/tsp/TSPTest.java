@@ -20,12 +20,6 @@ public class TSPTest {
     }
 
     @Test
-    public void randomGreedyCrossOver() throws Exception {
-        TSP tsp = new TSP();
-        tsp.runRandomGreedyCrossOverGA(1);
-    }
-
-    @Test
     public void randomizedGA() throws Exception {
         TSP tsp = new TSP();
         tsp.runRandomizedGA(4);
@@ -34,7 +28,7 @@ public class TSPTest {
     @Test
     public void bruteforceTsp() throws Exception {
         TSP tsp = new TSP();
-        //tsp.runBruteForceTSP();
+        tsp.runBruteForceTSP();
     }
 
 }
