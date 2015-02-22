@@ -1,9 +1,5 @@
 package net.dervism.genericalgorithms;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * Genetic algorithm engine that can run on any kind of implementation of the Chromosome class.
  *
@@ -106,7 +102,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             int bestFromGeneration = fitnessEvaluator.evalute(population);
             if (bestFromGeneration < best) {
                 best = bestFromGeneration;
-                System.out.println("Found better route in generation " + generation + " with score " + best
+                System.out.println("Generation " + generation + " with score " + best
                         + ", population size " + population.size());
             }
 

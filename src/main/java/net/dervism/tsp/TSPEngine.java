@@ -1,24 +1,22 @@
 package net.dervism.tsp;
 
-import net.dervism.genericalgorithms.*;
+import net.dervism.genericalgorithms.BitChromosome;
+import net.dervism.genericalgorithms.GeneticAlgorithmEngine;
+
+import java.util.Arrays;
 
 /**
  * Created by dervism on 03/03/14.
  */
 public class TSPEngine extends GeneticAlgorithmEngine<Long, BitChromosome> implements Runnable {
 
-    private final Population<BitChromosome> population;
-    private final Evolution<BitChromosome> evolution;
-    private final Encoder<Long, BitChromosome> encoder;
-    private final FitnessEvaluator<BitChromosome> fitnessEvaluator;
+    private final TSPPopulation population;
+    private final TSPEvolution evolution;
+    private final TSPEncoder encoder;
+    private final TSPFitnessEvaluator fitnessEvaluator;
 
-    public TSPEngine(
-            Population<BitChromosome> population,
-            Evolution<BitChromosome> evolution,
-            Encoder<Long, BitChromosome> encoder,
-            FitnessEvaluator<BitChromosome> fitnessEvaluator) {
+    public TSPEngine(TSPPopulation population, TSPEvolution evolution, TSPEncoder encoder, TSPFitnessEvaluator fitnessEvaluator) {
         super(population, evolution, encoder, fitnessEvaluator);
-
         this.population = population;
         this.evolution = evolution;
         this.encoder = encoder;
@@ -28,7 +26,9 @@ public class TSPEngine extends GeneticAlgorithmEngine<Long, BitChromosome> imple
     @Override
     public void run() {
 
-        this.execute(1, 0, 0.85, 0.15, 100, 0.6);
+        BitChromosome bestRoute = this.execute(1, 0, 0.85, 0.15, 100, 0.6);
+        long[] cities = encoder.toArray(bestRoute);
+        System.out.println(Arrays.toString(cities));
 
     }
 }

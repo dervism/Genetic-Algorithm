@@ -1,13 +1,11 @@
 package net.dervism.tsp;
 
 import net.dervism.genericalgorithms.BitChromosome;
-import net.dervism.genericalgorithms.FitnessEvaluator;
 import org.uncommons.maths.combinatorics.PermutationGenerator;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -21,7 +19,7 @@ public class TSP {
 
     public TSPEncoder tspEncoder;
 
-    public TSPFitnessEvalutor fitnessEvaluator;
+    public TSPFitnessEvaluator fitnessEvaluator;
 
     public SecureRandom random = new SecureRandom("random".getBytes());
 
@@ -34,7 +32,7 @@ public class TSP {
         mutationRate = 100 - (int)(100 * 0.01);
         crossoverRate = 100 - (int)(100 * 0.95);
 
-        fitnessEvaluator = new TSPFitnessEvalutor(16);
+        fitnessEvaluator = new TSPFitnessEvaluator(16);
         tspEncoder = new TSPEncoder();
         tspPopulation = new TSPPopulation();
         tspEvolution = new TSPEvolution();

@@ -13,7 +13,7 @@ public class TSPEngineTest {
                 new TSPPopulation(),
                 new TSPEvolution(),
                 new TSPEncoder(),
-                new TSPFitnessEvalutor(16)
+                new TSPFitnessEvaluator(16)
         );
         tspEngine.run();
     }

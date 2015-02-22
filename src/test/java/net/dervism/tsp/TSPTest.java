@@ -16,19 +16,19 @@ public class TSPTest {
     @Test
     public void evolutionaryGA() throws Exception {
         TSP tsp = new TSP();
-        tsp.evolutionaryGA(1, 0.85, 0.15, 100);
+        //tsp.evolutionaryGA(1, 0.85, 0.15, 100);
     }
 
     @Test
     public void randomizedGA() throws Exception {
         TSP tsp = new TSP();
-        tsp.runRandomizedGA(4);
+        //tsp.runRandomizedGA(4);
     }
 
     @Test
     public void bruteforceTsp() throws Exception {
         TSP tsp = new TSP();
-        tsp.runBruteForceTSP();
+        //tsp.runBruteForceTSP();
     }
 
 }

@@ -12,17 +12,17 @@ import java.util.Random;
 /**
  * Created by dervism on 08/03/14.
  */
-public class TSPFitnessEvalutor implements FitnessEvaluator<BitChromosome> {
+public class TSPFitnessEvaluator implements FitnessEvaluator<BitChromosome> {
 
     public int[][] distanceMatrix;
 
     private Random random;
 
-    public TSPFitnessEvalutor() {
+    public TSPFitnessEvaluator() {
         this(16);
     }
 
-    public TSPFitnessEvalutor(int cities) {
+    public TSPFitnessEvaluator(int cities) {
         distanceMatrix = new int[cities][cities];
         random = new Random(4682);
         createDistanceMatrix();
