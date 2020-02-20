@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by dervism on 14/02/14.
+ * The class compares some hardcoded initials tests on GAs.
+ * 
+ * See src/main/java/net/dervism/tsp/TSPEngine.java for a version that 
+ * that uses the Engine-interface.
+ * 
+ * Created by dervism on 03/02/14
  */
 public class TSP {
 
