@@ -74,7 +74,7 @@ public class BitChromosome implements Chromosome {
         // a long occupies 8 bytes
         byte[] ret = new byte[8];
 
-        // do a unsigned right shift
+        // do an unsigned right shift
         // - push everything to the right and insert 0's from the left
         ret[0] = (byte)(l >>> 56);
         ret[1] = (byte)(l >>> 48);

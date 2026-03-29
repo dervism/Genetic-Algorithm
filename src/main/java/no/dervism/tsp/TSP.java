@@ -44,11 +44,10 @@ public class TSP {
     }
 
     /**
-     * Countinuesly increases population size
+     * Continuously increases population size
      * to avoid convergence to local minima.
      */
-    public void evolutionaryIncreasingGA(final int minutes, final double crossoverRate, final double mutationRate,
-                                         int populationSize, final double reductionPercent) {
+    public void evolutionaryIncreasingGA(final int minutes, final double crossoverRate, final double mutationRate, int populationSize, final double reductionPercent) {
 
         // create initial population
         final List<BitChromosome> population = tspPopulation.createPopulation(populationSize);
@@ -105,7 +104,7 @@ public class TSP {
                 IO.println("Best score: " + best);
                 IO.println(Arrays.toString(cities));
             }
-        }).run();
+        }).start();
     }
 
     /**

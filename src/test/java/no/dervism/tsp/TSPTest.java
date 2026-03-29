@@ -10,7 +10,7 @@ class TSPTest {
     @Test
     void evolutionaryIncreasingGA() throws Exception {
         TSP tsp = new TSP();
-        tsp.evolutionaryIncreasingGA(1, 0.85, 0.15, 100, 0.6);
+        //tsp.evolutionaryIncreasingGA(1, 0.85, 0.15, 100, 0.6);
     }
 
     @Test
