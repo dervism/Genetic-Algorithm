@@ -111,7 +111,7 @@ public class TSPEncoder implements Encoder<Long, BitChromosome> {
     }
 
     /**
-     * Decodes a  4-bit value at the given index.
+     * Decodes a 4-bit value at the given index.
      *
      * @param bitChromosome
      * @param index

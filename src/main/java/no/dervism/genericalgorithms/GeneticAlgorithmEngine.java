@@ -69,7 +69,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
         fitnessEvaluator.sort(population);
 
         // the initial best chromosome
-        int best = fitnessEvaluator.evalute(population);
+        int best = fitnessEvaluator.evaluate(population);
         int generation = 1;
 
         // timer
@@ -99,7 +99,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             fitnessEvaluator.sort(population);
             population.selectBest(reductionPercent);
 
-            int bestFromGeneration = fitnessEvaluator.evalute(population);
+            int bestFromGeneration = fitnessEvaluator.evaluate(population);
             if (bestFromGeneration < best) {
                 best = bestFromGeneration;
                 IO.println("Generation " + generation + " with score " + best

@@ -55,7 +55,7 @@ public class TSP {
         fitnessEvaluator.sort(tspPopulation);
 
         new Thread(new Runnable() {
-            int best = fitnessEvaluator.evalute(tspPopulation);
+            int best = fitnessEvaluator.evaluate(tspPopulation);
             int generation = 1;
 
             long start = System.currentTimeMillis();
@@ -87,7 +87,7 @@ public class TSP {
                     fitnessEvaluator.sort(tspPopulation);
                     tspPopulation.selectBest(reductionPercent);
 
-                    int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
+                    int bestFromGeneration = fitnessEvaluator.evaluate(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
                         IO.println("Generation " + generation + " with score " + best
@@ -97,7 +97,7 @@ public class TSP {
                     generation++;
                 }
 
-                best = fitnessEvaluator.evalute(tspPopulation);
+                best = fitnessEvaluator.evaluate(tspPopulation);
 
                 BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
@@ -129,7 +129,7 @@ public class TSP {
         fitnessEvaluator.sort(tspPopulation);
 
         new Thread(new Runnable() {
-            int best = fitnessEvaluator.evalute(tspPopulation);
+            int best = fitnessEvaluator.evaluate(tspPopulation);
             int generation = 1;
 
             long start = System.currentTimeMillis();
@@ -161,7 +161,7 @@ public class TSP {
                     fitnessEvaluator.sort(tspPopulation);
                     tspPopulation.selectBest( ((crossovers * 2) + (mutations * 2)) );
 
-                    int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
+                    int bestFromGeneration = fitnessEvaluator.evaluate(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
                         IO.println("Found better route in generation " + generation + " with score " + best
@@ -171,7 +171,7 @@ public class TSP {
                     generation++;
                 }
 
-                best = fitnessEvaluator.evalute(tspPopulation);
+                best = fitnessEvaluator.evaluate(tspPopulation);
 
                 BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
@@ -202,7 +202,7 @@ public class TSP {
         fitnessEvaluator.sort(tspPopulation);
 
         new Thread(new Runnable() {
-            int best = fitnessEvaluator.evalute(tspPopulation);
+            int best = fitnessEvaluator.evaluate(tspPopulation);
             int generation = 1;
             boolean next = true;
 
@@ -234,7 +234,7 @@ public class TSP {
                     fitnessEvaluator.sort(tspPopulation);
                     tspPopulation.selectBest(0.3);
 
-                    int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
+                    int bestFromGeneration = fitnessEvaluator.evaluate(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
                         IO.println("Found better route in generation " + generation + " with score " + best
@@ -243,7 +243,7 @@ public class TSP {
                     generation++;
                 }
 
-                best = fitnessEvaluator.evalute(tspPopulation);
+                best = fitnessEvaluator.evaluate(tspPopulation);
 
                 BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);

@@ -5,9 +5,9 @@ package no.dervism.genericalgorithms;
  */
 public interface FitnessEvaluator<T extends Chromosome> {
 
-    public int evalute(T chromosome);
+    public int evaluate(T chromosome);
 
-    public int evalute(Population<T> population);
+    public int evaluate(Population<T> population);
 
     public void sort(Population<T> population);
 

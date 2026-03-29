@@ -82,7 +82,7 @@ public class TSPFitnessEvaluator implements FitnessEvaluator<BitChromosome> {
     }
 
     @Override
-    public int evalute(BitChromosome chromosome) {
+    public int evaluate(BitChromosome chromosome) {
         int fitness = 0;
 
         long[] sequence = chromosome.toArray();
@@ -101,9 +101,9 @@ public class TSPFitnessEvaluator implements FitnessEvaluator<BitChromosome> {
     }
 
     @Override
-    public int evalute(Population<BitChromosome> population) {
+    public int evaluate(Population<BitChromosome> population) {
         sort(population);
-        return evalute(getBest(population));
+        return evaluate(getBest(population));
     }
 
     /**
@@ -144,8 +144,8 @@ public class TSPFitnessEvaluator implements FitnessEvaluator<BitChromosome> {
     public class ChromosomeComparator implements Comparator<BitChromosome> {
         @Override
         public int compare(BitChromosome o1, BitChromosome o2) {
-            Integer fitness1 = evalute(o1);
-            Integer fitness2 = evalute(o2);
+            Integer fitness1 = evaluate(o1);
+            Integer fitness2 = evaluate(o2);
             return fitness1.compareTo(fitness2);
         }
     }
@@ -159,7 +159,7 @@ public class TSPFitnessEvaluator implements FitnessEvaluator<BitChromosome> {
         String ret = "";
         int c = 1;
         for (BitChromosome chromosome : population) {
-            ret += c++ + " " + evalute(chromosome) + ", ";
+            ret += c++ + " " + evaluate(chromosome) + ", ";
         }
 
         return ret;
