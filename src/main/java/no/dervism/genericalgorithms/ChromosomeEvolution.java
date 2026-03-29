@@ -24,7 +24,7 @@ public abstract class ChromosomeEvolution implements Evolution<BitChromosome> {
     public ChromosomeEvolution() {
         try {
             random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
-        } catch (SeedException e) {
+        } catch (SeedException _) {
             random = new SecureRandom();
         }
     }

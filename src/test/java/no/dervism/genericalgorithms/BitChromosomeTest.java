@@ -23,21 +23,21 @@ public class BitChromosomeTest {
         String ref = "";
         for(int i = 0; i < Long.numberOfLeadingZeros(bi); i++) ref += '0';
         ref += Long.toBinaryString(bi);
-        System.out.println(ref);
+        IO.println(ref);
 
         BitChromosome s = new BitChromosome();
         long l = s.setNthBit(63).setNthBit(0).genes;
 
         // print using the 'format' method
-        String str = String.format("%064d", new BigInteger(Long.toBinaryString(l)));
-        System.out.println(str);
+        String str = "%064d".formatted(new BigInteger(Long.toBinaryString(l)));
+        IO.println(str);
 
         // print using the 'numberOfLeadingZeros' technique
         // see: http://stackoverflow.com/a/10401425
         String str2 = "";
         for(int i = 0; i < Long.numberOfLeadingZeros(l); i++) str2 += '0';
         str2 += Long.toBinaryString(l);
-        System.out.println(str2);
+        IO.println(str2);
 
         // check our BitChromosome output with the BigInteger reference output
         assertEquals(ref, str);
@@ -47,7 +47,7 @@ public class BitChromosomeTest {
     @Test
     void getNthBit() throws Exception {
         BitChromosome c = new BitChromosome(0);
-        System.out.println("toString: " + c);
+        IO.println("toString: " + c);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class BitChromosomeTest {
         BitChromosome s = new BitChromosome();
         long l = s.setNthBit(63).setNthBit(0).setNthBit(31).genes;
 
-        String str = String.format("%064d", new BigInteger(Long.toBinaryString(l)));
-        System.out.println(str);
+        String str = "%064d".formatted(new BigInteger(Long.toBinaryString(l)));
+        IO.println(str);
 
         // BitChromosome is an immutable class so we must create a new one first
         BitChromosome s2 = new BitChromosome(l);
@@ -66,7 +66,7 @@ public class BitChromosomeTest {
         String str3 = "";
         for(int i = 0; i < Long.numberOfLeadingZeros(l2); i++) str3 += '0';
         str3 += Long.toBinaryString(l2);
-        System.out.println(str3);
+        IO.println(str3);
 
         assertFalse(bitChromosome1.getNthBit(63));
 
@@ -74,8 +74,8 @@ public class BitChromosomeTest {
         BitChromosome bitChromosome2 = s3.flipNthBit(63);
         long l3 = bitChromosome2.genes;
 
-        str = String.format("%064d", new BigInteger(Long.toBinaryString(l3)));
-        System.out.println(str);
+        str = "%064d".formatted(new BigInteger(Long.toBinaryString(l3)));
+        IO.println(str);
 
         assertTrue(bitChromosome2.getNthBit(63));
     }

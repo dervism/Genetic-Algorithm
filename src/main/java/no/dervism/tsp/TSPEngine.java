@@ -28,7 +28,7 @@ public class TSPEngine extends GeneticAlgorithmEngine<Long, BitChromosome> imple
 
         BitChromosome bestRoute = this.execute(1, 0, 0.85, 0.15, 100, 0.6);
         long[] cities = encoder.toArray(bestRoute);
-        System.out.println(Arrays.toString(cities));
+        IO.println(Arrays.toString(cities));
 
     }
 }

@@ -14,10 +14,10 @@ public class Combinations {
         CombinationGenerator<Integer> combination
                 = new CombinationGenerator<Integer>(list, k);
 
-        System.out.println("Total: " + combination.getTotalCombinations());
+        IO.println("Total: " + combination.getTotalCombinations());
 
         while (combination.hasMore()) {
-            System.out.println(combination.nextCombinationAsList());
+            IO.println(combination.nextCombinationAsList());
         }
 
     }

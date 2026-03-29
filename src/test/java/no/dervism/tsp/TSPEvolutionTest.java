@@ -23,18 +23,18 @@ class TSPEvolutionTest {
 
         // create a randomized bit sequenze
         BitChromosome bitChromosome = tspEncoder.createRandomChromosome(random);
-        System.out.println(bitChromosome);
+        IO.println(bitChromosome);
 
         // print the integers in the bitChromosome before the mutation
         long[] array = tspEncoder.toArray(bitChromosome);
-        System.out.println(Arrays.toString(array));
+        IO.println(Arrays.toString(array));
 
         // change it
         BitChromosome mutatedBitChromosome = tspEvolution.mutate(bitChromosome);
 
         // print out the new bitChromosome
         long[] mutated = tspEncoder.toArray(mutatedBitChromosome);
-        System.out.println(Arrays.toString(mutated));
+        IO.println(Arrays.toString(mutated));
 
         Arrays.sort(mutated);
         for (int i = 1; i < mutated.length; i++) {
@@ -62,7 +62,7 @@ class TSPEvolutionTest {
         }
         start = System.currentTimeMillis() - start;
 
-        System.out.println("Bitwise mutation: " + start + " millis.");
+        IO.println("Bitwise mutation: " + start + " millis.");
 
         start = System.currentTimeMillis();
         for (BitChromosome bitChromosome : population) {
@@ -70,7 +70,7 @@ class TSPEvolutionTest {
         }
         start = System.currentTimeMillis() - start;
 
-        System.out.println("Array mutation: " + start + " millis.");
+        IO.println("Array mutation: " + start + " millis.");
     }
 
     @Test
@@ -80,15 +80,15 @@ class TSPEvolutionTest {
 
         BitChromosome mother = tspEncoder.createRandomChromosome(new Random());
         long[] m = tspEncoder.toArray(mother);
-        System.out.println(Arrays.toString(m));
+        IO.println(Arrays.toString(m));
 
         BitChromosome father = tspEncoder.createRandomChromosome(new Random());
         long[] f = tspEncoder.toArray(father);
-        System.out.println(Arrays.toString(f));
+        IO.println(Arrays.toString(f));
 
         BitChromosome child = tspEvolution.crossover(mother, father);
         long[] c = tspEncoder.toArray(child);
-        System.out.println(Arrays.toString(c));
+        IO.println(Arrays.toString(c));
 
         Arrays.sort(c);
         for (int i = 1; i < c.length; i++) {
@@ -108,14 +108,14 @@ class TSPEvolutionTest {
         Random random = new Random();
         int mutationRate = 100 - (int)(100 * 0.60);
         int c = 0;
-        System.out.print("Mutated ");
+        IO.print("Mutated ");
         for (int i = 0; i < 30; i++) {
             int rate = random.nextInt(100);
             if (rate > mutationRate) {
-                System.out.print(i + " ");
+                IO.print(i + " ");
                 c++;
             }
         }
-        System.out.print(" " + c + "/" + 30);
+        IO.print(" " + c + "/" + 30);
     }
 }

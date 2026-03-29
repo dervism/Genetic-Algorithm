@@ -16,17 +16,17 @@ class KnapsackTest {
 
         List<BitChromosome> population = ks.createRandomPopulation(10);
 
-        BitChromosome bitChromosome = population.get(0);
-        System.out.println(bitChromosome);
+        BitChromosome bitChromosome = population.getFirst();
+        IO.println(bitChromosome);
 
         int fitness = ks.calcFitness(bitChromosome);
-        System.out.println("Fitness: " + fitness);
+        IO.println("Fitness: " + fitness);
 
         int space = ks.calcSpace(bitChromosome);
-        System.out.println("Space: " + space);
+        IO.println("Space: " + space);
 
         int items = ks.itemsInside(bitChromosome);
-        System.out.println("Items: " + items);
+        IO.println("Items: " + items);
     }
 
 }

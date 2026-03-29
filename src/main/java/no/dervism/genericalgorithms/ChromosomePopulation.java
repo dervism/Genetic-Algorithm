@@ -26,7 +26,7 @@ public abstract class ChromosomePopulation<T extends Chromosome> implements Popu
         int newSize = population.size() - reduce;
 
         do {
-            population.remove(population.size()-1);
+            population.removeLast();
         } while (population.size() > newSize);
     }
 

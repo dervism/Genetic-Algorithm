@@ -19,7 +19,7 @@ class BitChromosomeEncoderTest {
         assertEquals(100, encoder.getFirstVal(bitChromosome));
         assertEquals(82, encoder.getSecondVal(bitChromosome));
 
-        System.out.println(bitChromosome);
+        IO.println(bitChromosome);
     }
 
 }

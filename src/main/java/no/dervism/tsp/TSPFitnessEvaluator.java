@@ -38,22 +38,22 @@ public class TSPFitnessEvaluator implements FitnessEvaluator<BitChromosome> {
             }
         }
 
-        System.out.println("\t ");
+        IO.println("\t ");
 
         // set distance from a city to itself to 0
         for (int i = 0; i < distanceMatrix.length; i++) {
-            System.out.print((i == 0 ? " \t\t" : "") + i + "\t|\t");
+            IO.print((i == 0 ? " \t\t" : "") + i + "\t|\t");
             distanceMatrix[i][i] = 0;
         }
 
-        System.out.println();
+        IO.println();
 
         for (int i = 0; i < distanceMatrix.length; i++) {
-            System.out.print((i < 10 ? " ":"") + i + " | \t");
+            IO.print((i < 10 ? " " : "") + i + " | \t");
             for (int j = 0; j < distanceMatrix[i].length; j++) {
-                System.out.print(distanceMatrix[i][j] + "\t|\t");
+                IO.print(distanceMatrix[i][j] + "\t|\t");
             }
-            System.out.println();
+            IO.println();
         }
     }
 

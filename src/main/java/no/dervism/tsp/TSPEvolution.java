@@ -27,7 +27,7 @@ public class TSPEvolution implements Evolution<BitChromosome> {
         // evolution on every execution
         try {
             random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
-        } catch (SeedException e) {
+        } catch (SeedException _) {
             random = new SecureRandom();
         }
     }

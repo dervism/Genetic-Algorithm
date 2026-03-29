@@ -24,7 +24,7 @@ public class TSPPopulation implements Population<BitChromosome> {
         this.tspEncoder = new TSPEncoder();
         try {
             random = new MersenneTwisterRNG(new SecureRandomSeedGenerator());
-        } catch (SeedException e) {
+        } catch (SeedException _) {
             random = new SecureRandom();
         }
     }
@@ -57,7 +57,7 @@ public class TSPPopulation implements Population<BitChromosome> {
         int newSize = population.size() - reduce;
 
         do {
-            population.remove(population.size()-1);
+            population.removeLast();
         } while (population.size() > newSize);
     }
 

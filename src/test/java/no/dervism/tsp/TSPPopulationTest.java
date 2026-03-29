@@ -16,7 +16,7 @@ class TSPPopulationTest {
         tspPopulation.createPopulation(30);
         tspFitnessEvaluator.sort(tspPopulation);
         tspPopulation.selectBest(0.5);
-        System.out.println(tspFitnessEvaluator.stat(tspPopulation.list()));
+        IO.println(tspFitnessEvaluator.stat(tspPopulation.list()));
     }
 
     @Test

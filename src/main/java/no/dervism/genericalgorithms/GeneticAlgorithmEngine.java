@@ -102,7 +102,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             int bestFromGeneration = fitnessEvaluator.evalute(population);
             if (bestFromGeneration < best) {
                 best = bestFromGeneration;
-                System.out.println("Generation " + generation + " with score " + best
+                IO.println("Generation " + generation + " with score " + best
                         + ", population size " + population.size());
             }
 

@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.15.0</version>
                 <configuration>
                     <release>${java.version}</release>
                     <compilerArgs>--enable-preview</compilerArgs>
@@ -50,27 +50,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.5</version>
                 <configuration>
                     <argLine>--enable-preview</argLine>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.openrewrite.maven</groupId>
-                <artifactId>rewrite-maven-plugin</artifactId>
-                <version>6.35.0</version>
-                <configuration>
-                    <activeRecipes>
-                        <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe>
-                    </activeRecipes>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.openrewrite.recipe</groupId>
-                        <artifactId>rewrite-testing-frameworks</artifactId>
-                        <version>3.32.0</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

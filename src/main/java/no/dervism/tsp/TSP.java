@@ -90,7 +90,7 @@ public class TSP {
                     int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
-                        System.out.println("Generation " + generation + " with score " + best
+                        IO.println("Generation " + generation + " with score " + best
                                 + ", population size " + population.size());
                     }
 
@@ -102,8 +102,8 @@ public class TSP {
                 BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
 
-                System.out.println("Best score: " + best);
-                System.out.println(Arrays.toString(cities));
+                IO.println("Best score: " + best);
+                IO.println(Arrays.toString(cities));
             }
         }).run();
     }
@@ -164,7 +164,7 @@ public class TSP {
                     int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
-                        System.out.println("Found better route in generation " + generation + " with score " + best
+                        IO.println("Found better route in generation " + generation + " with score " + best
                                 + ", population size " + population.size());
                     }
 
@@ -176,8 +176,8 @@ public class TSP {
                 BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
 
-                System.out.println("Best score: " + best);
-                System.out.println(Arrays.toString(cities));
+                IO.println("Best score: " + best);
+                IO.println(Arrays.toString(cities));
             }
         }).run();
     }
@@ -237,7 +237,7 @@ public class TSP {
                     int bestFromGeneration = fitnessEvaluator.evalute(tspPopulation.get(0));
                     if (bestFromGeneration < best) {
                         best = bestFromGeneration;
-                        System.out.println("Found better route in generation " + generation + " with score " + best
+                        IO.println("Found better route in generation " + generation + " with score " + best
                                 + ", size " + population.size());
                     }
                     generation++;
@@ -248,8 +248,8 @@ public class TSP {
                 BitChromosome bestRoute = fitnessEvaluator.getBest(tspPopulation);
                 long[] cities = tspEncoder.toArray(bestRoute);
 
-                System.out.println("Best score: " + best);
-                System.out.println(Arrays.toString(cities));
+                IO.println("Best score: " + best);
+                IO.println(Arrays.toString(cities));
             }
         }).run();
 
@@ -271,13 +271,13 @@ public class TSP {
                 Integer[] cities = new Integer[15];
                 Integer[] cities2 = {12, 10, 8, 7, 6, 9, 14, 2, 13, 11, 3, 5, 4, 15, 1};
                 for (int i = 1; i <= cities.length; i++) {
-                    cities[i-1] = new Integer(i);
+                    cities[i-1] = Integer.valueOf(i);
                 }
-                System.out.println(Arrays.toString(cities2));
+                IO.println(Arrays.toString(cities2));
 
                 PermutationGenerator<Integer> pg = new PermutationGenerator<>(cities2);
                 long totalPermutations = pg.getTotalPermutations();
-                System.out.println("Total permutations: " + totalPermutations);
+                IO.println("Total permutations: " + totalPermutations);
 
                 int best = Integer.MAX_VALUE;
                 int[] bestRoute = null;
@@ -285,7 +285,7 @@ public class TSP {
 
                 while (pg.hasMore()) {
                     List<Integer> route = pg.nextPermutationAsList();
-                    route.add(0, startCity);
+                    route.addFirst(startCity);
                     int[] array = new int[16];
                     for (int i = 0; i < array.length; i++) {
                         array[i] = route.get(i);
@@ -295,7 +295,7 @@ public class TSP {
                     if (fitness < best) {
                         best = fitness;
                         bestRoute = array;
-                        System.out.println("Best: " + best + Arrays.toString(array));
+                        IO.println("Best: " + best + Arrays.toString(array));
                     }
                     ++count;
                     if ((count % 100000000) == 0) {
@@ -303,7 +303,7 @@ public class TSP {
                     }
                 }
 
-                System.out.println("Best route: " + best + ", " + Arrays.toString(bestRoute));
+                IO.println("Best route: " + best + ", " + Arrays.toString(bestRoute));
             }
         }).run();
 
