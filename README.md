@@ -8,8 +8,7 @@ which contains among others a brute force algorithm.
 Because a genetic algorithm (GA) only simulates an evolution, there is no guarante for finding the best solution in one execution.
 This means that when running the GA on a problem where the search space is extremely large, we'll never be able to tell
 wheter or not the result in fact was the best one. To determine speed and performance of the GA in this implementation, the
-TSPFitnessEvaluator is hardcoded with a known best-route. When executing the algorithm, we can easily see how close or far the result
-is from the actual best result.
+TSPFitnessEvaluator is hardcoded with a known best-route. When executing the algorithm, we can easily see how close or far the result is from the actual best result.
 
 ## How to use the engine
 A genetic algorithm is constructed using a few building blocks:
