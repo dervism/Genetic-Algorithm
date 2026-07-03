@@ -50,7 +50,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
     }
 
     /**
-     * Standard implementation of a genetic algorithm that countinuesly increases
+     * Standard implementation of a genetic algorithm that continuously increases
      * population size to avoid convergence to local minima. Recommended rate
      * parameters are 0.85 for the crossover rate and 0.05-0.1 for the mutation
      * rate. You should experiment with the parameters to find the combination

@@ -1,7 +1,7 @@
 ## A simple demonstration of an engine for running genetic algorithms.
 
 ### How to test
-To run the Travelling Salesman Problem, simply run the TSPEngineTest. You can also run TSPTest
+To run the Travelling Salesman Problem, simply run Main. You can also run TSPTest
 which contains among others a brute force algorithm.
 
 ### How to evaluate the performance
