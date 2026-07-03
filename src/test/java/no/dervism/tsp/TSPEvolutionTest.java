@@ -50,7 +50,6 @@ class TSPEvolutionTest {
 
     @Test
     void benchmarkMutation() {
-        TSP tsp = new TSP();
         TSPEvolution tspEvolution = new TSPEvolution();
         TSPPopulation tspPopulation = new TSPPopulation();
 

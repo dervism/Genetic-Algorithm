@@ -9,7 +9,6 @@ class TSPPopulationTest {
 
     @Test
     void selectBest() throws Exception {
-        TSP tsp = new TSP();
         TSPPopulation tspPopulation = new TSPPopulation();
         TSPFitnessEvaluator tspFitnessEvaluator = new TSPFitnessEvaluator(16);
 

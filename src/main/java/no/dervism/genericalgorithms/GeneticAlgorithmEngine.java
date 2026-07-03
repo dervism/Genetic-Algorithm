@@ -1,5 +1,7 @@
 package no.dervism.genericalgorithms;
 
+import java.util.Random;
+
 /**
  * Genetic algorithm engine that can run on any kind of implementation of the Chromosome class.
  *
@@ -17,6 +19,8 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
     protected Encoder<T, C> encoder;
 
     protected FitnessEvaluator<C> fitnessEvaluator;
+
+    protected Random random = new Random();
 
     public GeneticAlgorithmEngine(
             Population<C> population, Evolution<C> evolution, Encoder<T, C> encoder, FitnessEvaluator<C> fitnessEvaluator) {
@@ -103,6 +107,167 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             if (bestFromGeneration < best) {
                 best = bestFromGeneration;
                 IO.println("Generation " + generation + " with score " + best
+                        + ", population size " + population.size());
+            }
+
+            generation++;
+        }
+
+        return fitnessEvaluator.getBest(population);
+    }
+
+    /**
+     * Executes the steady-state GA for one minute with default rates.
+     *
+     * @param crossoverRate
+     * @param mutationRate
+     * @return the best chromosome found
+     */
+    public C executeEvolutionary(double crossoverRate, double mutationRate) {
+        return executeEvolutionary(1, 0, crossoverRate, mutationRate, 100);
+    }
+
+    /**
+     * Executes the steady-state GA with a seconds timer.
+     *
+     * @param seconds
+     * @param crossoverRate
+     * @param mutationRate
+     * @param populationSize
+     * @return the best chromosome found
+     */
+    public C executeEvolutionary(int seconds, double crossoverRate, double mutationRate, int populationSize) {
+        return executeEvolutionary(0, seconds, crossoverRate, mutationRate, populationSize);
+    }
+
+    /**
+     * A genetic algorithm that keeps the population size at the same level
+     * without adding any random chromosomes in any cycle. Instead, a crossover
+     * rate and a mutation rate is used to transform only the given percentage of
+     * the population. The selection strategy simply removes as many chromosomes
+     * as were added. This way, the population should get fitter with every cycle.
+     *
+     * @param minutes
+     * @param seconds
+     * @param crossoverRate
+     * @param mutationRate
+     * @param populationSize
+     * @return the best chromosome found
+     */
+    public C executeEvolutionary(int minutes, int seconds, double crossoverRate, double mutationRate,
+                                 int populationSize) {
+        // initiate the population
+        population.createPopulation(populationSize);
+        fitnessEvaluator.sort(population);
+
+        // the initial best chromosome
+        int best = fitnessEvaluator.evaluate(population);
+        int generation = 1;
+
+        // timer
+        long start = System.currentTimeMillis();
+        long end = start + (minutes * 60000) + (seconds * 1000);
+
+        while(System.currentTimeMillis() < end) {
+
+            // do crossover on the 'crossoverRate' % of the population
+            int crossovers = (int) (population.size() * crossoverRate);
+            for (int i = 0; i < crossovers; i++) {
+                C[] parents = population.selectParents(0.5);
+                C child1 = evolution.crossover(parents[0], parents[1]);
+                C child2 = evolution.crossover(parents[1], parents[0]);
+                population.add(child1); population.add(child2);
+            }
+
+            // do mutations on the 'mutationRate' % of the population
+            int mutations = (int) (population.size() * mutationRate);
+            for (int i = 0; i < mutations; i++) {
+                C[] parents = population.selectParents(0.3);
+                population.add(evolution.mutate(parents[0]));
+                population.add(evolution.mutate(parents[1]));
+            }
+
+            // select the best chromosomes, removing exactly as many as were added
+            // so the population size is kept constant
+            fitnessEvaluator.sort(population);
+            int added = (crossovers * 2) + (mutations * 2);
+            double reductionRate = population.size() == 0 ? 0 : (double) added / population.size();
+            population.selectBest(reductionRate);
+
+            int bestFromGeneration = fitnessEvaluator.evaluate(population);
+            if (bestFromGeneration < best) {
+                best = bestFromGeneration;
+                IO.println("Found better route in generation " + generation + " with score " + best
+                        + ", population size " + population.size());
+            }
+
+            generation++;
+        }
+
+        return fitnessEvaluator.getBest(population);
+    }
+
+    /**
+     * Executes the randomized GA for the given number of minutes using a
+     * default population size of 200.
+     *
+     * @param minutes
+     * @return the best chromosome found
+     */
+    public C executeRandomized(int minutes) {
+        return executeRandomized(minutes, 0, 200);
+    }
+
+    /**
+     * This version does not use the suggested rates to do crossovers or
+     * mutations, instead a crossover, a mutant and two random chromosomes are
+     * added until the new generation is created (that is, the population size is
+     * back at the initial level). When the generation is created, sort and
+     * select the best chromosomes and repeat the process.
+     *
+     * @param minutes
+     * @param seconds
+     * @param populationSize
+     * @return the best chromosome found
+     */
+    public C executeRandomized(int minutes, int seconds, int populationSize) {
+        // create initial population
+        population.createPopulation(populationSize);
+        fitnessEvaluator.sort(population);
+
+        int best = fitnessEvaluator.evaluate(population);
+        int generation = 1;
+
+        long start = System.currentTimeMillis();
+        long end = start + (minutes * 60000) + (seconds * 1000);
+
+        while(System.currentTimeMillis() < end) {
+
+            // create a new generation
+            while (population.size() < populationSize) {
+                // select two parents
+                C[] parents = population.selectParents(0.8);
+
+                // one crossover child from each parent
+                population.add(evolution.crossover(parents[0], parents[1]));
+                population.add(evolution.crossover(parents[1], parents[0]));
+
+                // two random children
+                population.add(encoder.createRandomChromosome(random));
+                population.add(encoder.createRandomChromosome(random));
+
+                // the best from previous generation, but randomized
+                population.add(evolution.mutate(fitnessEvaluator.getBest(population)));
+            }
+
+            // select the best
+            fitnessEvaluator.sort(population);
+            population.selectBest(0.3);
+
+            int bestFromGeneration = fitnessEvaluator.evaluate(population);
+            if (bestFromGeneration < best) {
+                best = bestFromGeneration;
+                IO.println("Found better route in generation " + generation + " with score " + best
                         + ", population size " + population.size());
             }
 
