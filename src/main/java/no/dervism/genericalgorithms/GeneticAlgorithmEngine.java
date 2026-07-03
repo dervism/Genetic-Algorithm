@@ -104,7 +104,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             population.selectBest(reductionPercent);
 
             int bestFromGeneration = fitnessEvaluator.evaluate(population);
-            if (bestFromGeneration < best) {
+            if (fitnessEvaluator.isBetter(bestFromGeneration, best)) {
                 best = bestFromGeneration;
                 IO.println("Generation " + generation + " with score " + best
                         + ", population size " + population.size());
@@ -195,7 +195,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             population.selectBest(reductionRate);
 
             int bestFromGeneration = fitnessEvaluator.evaluate(population);
-            if (bestFromGeneration < best) {
+            if (fitnessEvaluator.isBetter(bestFromGeneration, best)) {
                 best = bestFromGeneration;
                 IO.println("Found better route in generation " + generation + " with score " + best
                         + ", population size " + population.size());
@@ -265,7 +265,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             population.selectBest(0.3);
 
             int bestFromGeneration = fitnessEvaluator.evaluate(population);
-            if (bestFromGeneration < best) {
+            if (fitnessEvaluator.isBetter(bestFromGeneration, best)) {
                 best = bestFromGeneration;
                 IO.println("Found better route in generation " + generation + " with score " + best
                         + ", population size " + population.size());
