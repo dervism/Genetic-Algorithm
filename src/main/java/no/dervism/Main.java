@@ -22,7 +22,6 @@ public class Main {
             );
             tspEngine.run();
         } else if (input == 2) {
-            System.out.println("Please wait...");
             KnapsackEngine knapsackEngine = new KnapsackEngine(
                     new KnapsackPopulation(),
                     new KnapsackEvolution(),
