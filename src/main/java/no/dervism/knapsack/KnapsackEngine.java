@@ -23,7 +23,7 @@ public class KnapsackEngine extends GeneticAlgorithmEngine<Integer, BitChromosom
 
     @Override
     public void run() {
-        BitChromosome best = this.execute(1, 0, 0.85, 0.15, 100, 0.6);
+        BitChromosome best = this.executeEvolutionary(1, 0, 0.85, 0.15, 100);
 
         int value = fitnessEvaluator.calcValue(best);
         int space = fitnessEvaluator.calcSpace(best);

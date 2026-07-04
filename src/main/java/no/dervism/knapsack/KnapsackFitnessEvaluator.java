@@ -35,7 +35,7 @@ public class KnapsackFitnessEvaluator implements FitnessEvaluator<BitChromosome>
         this.knapsackSpace = knapsackSpace;
         this.objectValue = new int[objects];
         this.objectSpace = new int[objects];
-        this.random = new Random(1234);
+        this.random = new Random();
         createObjectsAndValues();
     }
 

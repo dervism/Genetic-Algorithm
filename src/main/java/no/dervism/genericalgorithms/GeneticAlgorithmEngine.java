@@ -197,7 +197,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             int bestFromGeneration = fitnessEvaluator.evaluate(population);
             if (fitnessEvaluator.isBetter(bestFromGeneration, best)) {
                 best = bestFromGeneration;
-                IO.println("Found better route in generation " + generation + " with score " + best
+                IO.println("Generation " + generation + " with score " + best
                         + ", population size " + population.size());
             }
 
@@ -267,7 +267,7 @@ public class GeneticAlgorithmEngine<T, C extends Chromosome> {
             int bestFromGeneration = fitnessEvaluator.evaluate(population);
             if (fitnessEvaluator.isBetter(bestFromGeneration, best)) {
                 best = bestFromGeneration;
-                IO.println("Found better route in generation " + generation + " with score " + best
+                IO.println("Generation " + generation + " with score " + best
                         + ", population size " + population.size());
             }
 
